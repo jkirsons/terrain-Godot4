@@ -1,7 +1,7 @@
 extends KinematicBody
 
 export var gravity = -10
-export var max_speed = 280
+export var max_speed = 8
 
 onready var camera = get_node("/root/Spatial/Player/Target/Camera")
 var velocity = Vector3()
@@ -12,22 +12,24 @@ func _ready():
 
 func _physics_process(delta):
 	velocity.y += gravity * delta
-	var desired_velocity = get_input() * max_speed * delta
+	var desired_velocity = get_input() * max_speed
 
 	velocity.x = desired_velocity.x
 	velocity.z = desired_velocity.z
 	velocity = move_and_slide(velocity, Vector3.UP, true)
+	
 
 func get_input():
 	var input_dir = Vector3()
+	var trans = camera.get_global_transform()
 	# desired move in camera direction
 	if Input.is_action_pressed("ui_up"):
-		input_dir += -camera.global_transform.basis.z
+		input_dir += -trans.basis.z
 	if Input.is_action_pressed("ui_down"):
-		input_dir += camera.global_transform.basis.z
+		input_dir += trans.basis.z
 	if Input.is_action_pressed("ui_left"):
-		input_dir += -camera.global_transform.basis.x
+		input_dir += -trans.basis.x
 	if Input.is_action_pressed("ui_right"):
-		input_dir += camera.global_transform.basis.x
+		input_dir += trans.basis.x
 	input_dir = input_dir.normalized()
 	return input_dir
