@@ -1,5 +1,5 @@
 tool
-extends "res://FillMethods.gd"
+extends "res://Scripts/FillMethods.gd"
 
 export var sandPath : NodePath
 onready var sandGridMap : GridMap = get_node(sandPath)
@@ -15,7 +15,7 @@ export var updateScene : bool = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#if Engine.editor_hint:
-	pass
+	loadTiles()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,7 +26,7 @@ func _process(delta):
 			fillRect(-20, -20, 0, 40, 40, waterGridMap, "Water")
 		if sandGridMap:
 			sandGridMap.clear()
-			fillCircle(0, 0, 0, 10, waterGridMap, "Sand")
+			fillCircle(0, 0, 0, 10, sandGridMap, "Sand")
 		updateScene = false
 
 

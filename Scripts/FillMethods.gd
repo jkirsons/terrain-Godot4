@@ -5,6 +5,18 @@ var r1 = Basis( Quat(Vector3(0, 1, 0), deg2rad(90)) ).get_orthogonal_index()
 var r2 = Basis( Quat(Vector3(0, 1, 0), deg2rad(180)) ).get_orthogonal_index()
 var r3 = Basis( Quat(Vector3(0, 1, 0), deg2rad(270)) ).get_orthogonal_index()
 
+export var tiles = {}
+
+func _ready():
+	loadTiles()
+
+func loadTiles():
+	var file = File.new()
+	file.open("res://Tiles.json", file.READ)
+	var txt = file.get_as_text()
+	var data_parse = JSON.parse(txt)
+	tiles = data_parse.result
+	
 func fillRect(x_start, z_start, y, width, height, gridMap :GridMap, itemName : String):
 	var item = gridMap.mesh_library.find_item_by_name(itemName)
 	for x in range(x_start, x_start+width):
@@ -26,9 +38,8 @@ func fillCircle(x_centre, z_centre, y, radius, gridMap : GridMap, \
 	
 	var edges = {}
 	for obj in buffer:
-		if [obj[0]+1,obj[1]] in buffer:
-			edges[obj] = gridMap.mesh_library.find_item_by_name("Sand_Diagonal")
-	
+		if not [obj[0]+1,obj[1]] in buffer:
+			edges[[obj[0]+1,obj[1]]] = gridMap.mesh_library.find_item_by_name("Sand_Edge")
 	for obj in edges:
 		gridMap.set_cell_item(obj[0] + x_centre, y, obj[1] + z_centre, edges[obj])
 

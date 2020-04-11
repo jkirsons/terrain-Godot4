@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/endesga-32-1x.png-7697ea03584aeb305add2cc20122d625.s3tc.stex"
-path.etc2="res://.import/endesga-32-1x.png-7697ea03584aeb305add2cc20122d625.etc2.stex"
+path.s3tc="res://.import/endesga-32-1x.png-194c96cd13736093cbbd1f365b53aa89.s3tc.stex"
+path.etc2="res://.import/endesga-32-1x.png-194c96cd13736093cbbd1f365b53aa89.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://endesga-32-1x.png"
-dest_files=[ "res://.import/endesga-32-1x.png-7697ea03584aeb305add2cc20122d625.s3tc.stex", "res://.import/endesga-32-1x.png-7697ea03584aeb305add2cc20122d625.etc2.stex" ]
+source_file="res://Resources/endesga-32-1x.png"
+dest_files=[ "res://.import/endesga-32-1x.png-194c96cd13736093cbbd1f365b53aa89.s3tc.stex", "res://.import/endesga-32-1x.png-194c96cd13736093cbbd1f365b53aa89.etc2.stex" ]
 
 [params]
 

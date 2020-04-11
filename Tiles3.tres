@@ -1,6 +1,6 @@
 [gd_resource type="MeshLibrary" load_steps=53 format=2]
 
-[ext_resource path="res://Material.material" type="Material" id=1]
+[ext_resource path="res://Resources/Material.material" type="Material" id=1]
 
 [sub_resource type="ArrayMesh" id=1]
 resource_name = "Hill_1_Edge"
