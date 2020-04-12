@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.82.7 commit date:2020-03-12, commit time:05:06, hash:375c7dc4caf4</authoring_tool>
     </contributor>
-    <created>2020-04-10T18:15:40</created>
-    <modified>2020-04-10T18:15:40</modified>
+    <created>2020-04-12T22:45:20</created>
+    <modified>2020-04-12T22:45:20</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -115,7 +115,7 @@
           </technique_common>
         </source>
         <source id="Water-mesh-map-0">
-          <float_array id="Water-mesh-map-0-array" count="12">0.5 0.453125 0.5 0.453125 0.5 0.453125 0.5 0.453125 0.5 0.453125 0.5 0.453125</float_array>
+          <float_array id="Water-mesh-map-0-array" count="12">4.5 0.609375 -2.5 0.390625 -2.5 0.609375 4.5 0.609375 4.5 0.390625 -2.5 0.390625</float_array>
           <technique_common>
             <accessor source="#Water-mesh-map-0-array" count="6" stride="2">
               <param name="S" type="float"/>

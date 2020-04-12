@@ -6,5 +6,10 @@
 },
 "Water": { 
 	"Water": { "orth": 0, "height": [1,1,1,1]}
+},
+"Land": {
+	"Hill_Flat": { "orth": 0, "height": [1,1,1,1]},
+	"Hill_1_Edge": { "orth": 3, "height": [1,1,0,0]},
+	"Hill_Diagonal": { "orth": 0, "height": [1,0,0,0]}
 }
 }

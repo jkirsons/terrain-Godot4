@@ -10,14 +10,11 @@ onready var sandGridMap : GridMap = get_node(sandPath)
 onready var waterGridMap : GridMap = get_node(waterPath)
 onready var landGridMap : GridMap = get_node(landPath)
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
 	#if Engine.editor_hint:
 	loadTiles()
 	updateScene = true
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if updateScene:
 		loadTiles()
@@ -29,5 +26,9 @@ func _process(delta):
 		if sandGridMap:
 			sandGridMap.clear()
 			fillCircle (0, 0, 0, 8, sandGridMap, "Sand")
+			
+		if landGridMap:
+			landGridMap.clear()
+			fillCircle (0, 5, 0, 2, landGridMap, "Hill_Flat")
 		
 		updateScene = false

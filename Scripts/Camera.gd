@@ -1,7 +1,7 @@
 extends Camera
 
-export var speed = 6.0
-export var fixedMode := true
+export var speed = 4.0
+var fixedMode := true # This is set on the player
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -10,11 +10,13 @@ func _ready():
 func _physics_process(delta):
 	var player = get_parent().get_parent().get_global_transform().origin
 	var pos = get_global_transform().origin
-	
 	var target 
+	
 	if fixedMode:
+		# global offset from player
 		target = player + get_parent().transform.origin
 	else:
+		# behind player
 		target = get_parent().global_transform.origin
 		
 	var offset = pos - target
