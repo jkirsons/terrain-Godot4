@@ -1,1 +1,10 @@
-{ "Sand_Diagonal": { "value": 2, "orth": 0, "condition": [[0,0,1],[0,0,0],[0,0,0]] } }
+{ "Sand": { 
+ 	"Sand": { "orth": 0, "height":[1,1,1,1] },
+ 	"Sand_Diagonal": { "orth": 2, "height":[0,1,1,1] },
+ 	"Sand_Diagonal_2": { "orth": 1, "height":[0,0,0,1] },
+ 	"Sand_Edge": { "orth": 1, "height":[0,0,1,1] }
+},
+"Water": { 
+	"Water": { "orth": 0, "height": [1,1,1,1]}
+}
+}

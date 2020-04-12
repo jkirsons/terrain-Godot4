@@ -1,7 +1,7 @@
 extends KinematicBody
 
 export var gravity = -10
-export var max_speed = 8
+export var max_speed = 4
 
 onready var camera = get_node("/root/Spatial/Player/Target/Camera")
 var velocity = Vector3()
