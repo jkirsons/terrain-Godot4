@@ -66,5 +66,4 @@ void fragment()
    
     vec4 col = mix(foam_color, water_color, step(foam_depth, diff));
     ALBEDO = col.rgb;
-   
 }

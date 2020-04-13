@@ -6,6 +6,8 @@ export var turn_speed = 1.2
 export var fixedMode := true
 
 onready var camera = get_node("/root/Spatial/Player/Target/Camera")
+onready var anim = get_node("AnimationTree")
+
 var velocity = Vector3()
 var inputs = {"ui_up": Vector3.FORWARD, "ui_down": Vector3.BACK, "ui_left": Vector3.LEFT, "ui_right": Vector3.RIGHT}
 
@@ -24,9 +26,11 @@ func _physics_process(delta):
 	velocity.x = desired_velocity.x
 	velocity.z = desired_velocity.z
 	velocity = move_and_slide(velocity, Vector3.UP, true)
+	anim.set("parameters/Idle_Run/blend_amount", input.length())
 
 	if(input != Vector3.ZERO and fixedMode):
-		transform.basis = Basis(input, Vector3.UP, input.cross(Vector3.UP))
+		var dir = input.rotated(Vector3.UP, -PI/2.0)
+		transform.basis = Basis(dir, Vector3.UP, dir.cross(Vector3.UP))
 	if(input != Vector3.ZERO and not fixedMode):
 		var angle = min(PI/2, Vector3.FORWARD.angle_to(input)) * sign(input.x) * -1
 		var turnBasis = Basis(Vector3.UP, angle)

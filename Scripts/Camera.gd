@@ -8,8 +8,8 @@ func _ready():
 	set_as_toplevel(true)
 
 func _physics_process(delta):
-	var player = get_parent().get_parent().get_global_transform().origin
-	var pos = get_global_transform().origin
+	var player = get_parent().get_parent().global_transform.origin
+	var pos = global_transform.origin
 	var target 
 	
 	if fixedMode:
