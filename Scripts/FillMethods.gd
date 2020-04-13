@@ -10,6 +10,7 @@ var basisList = [
 
 var surrounding = [[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0]]
 
+# Tile metadata
 export var tiles = {}
 
 func _ready():
@@ -88,6 +89,13 @@ func leftRotate(arr : Array, steps):
 		arr[arr.size()-1] = temp
 	return arr
 
+# Finds which tileset a tile is in
+func getTileSetName(tileName):
+	for tileSet in tiles:
+		if tileName in tiles[tileSet]:
+			return tileSet
+	return ""
+	
 func fillRect(x_start, z_start, y, width, height, gridMap :GridMap, itemName : String):
 	var item = gridMap.mesh_library.find_item_by_name(itemName)
 	for x in range(x_start, x_start+width):
@@ -96,10 +104,6 @@ func fillRect(x_start, z_start, y, width, height, gridMap :GridMap, itemName : S
 
 func fillCircle(x_centre, z_centre, y, radius, gridMap : GridMap, itemName : String):
 	var item = gridMap.mesh_library.find_item_by_name(itemName)
-	var tileSetName = ""
-	for tileSet in tiles:
-		if itemName in tiles[tileSet]:
-			tileSetName = tileSet
 	
 	var buffer = {}
 	for x in range(-radius, radius+1):
@@ -111,6 +115,6 @@ func fillCircle(x_centre, z_centre, y, radius, gridMap : GridMap, itemName : Str
 		gridMap.set_cell_item(obj[0] + x_centre, y, obj[1] + z_centre, buffer[obj])
 	
 	# smooth edges
-	var ret = smooth(buffer, tileSetName, gridMap.mesh_library)
+	var ret = smooth(buffer, getTileSetName(itemName), gridMap.mesh_library)
 	for obj in ret.edges:
 		gridMap.set_cell_item(obj[0] + x_centre, y, obj[1] + z_centre, ret.edges[obj], ret.rotation[obj])

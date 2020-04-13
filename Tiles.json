@@ -5,7 +5,7 @@
  	"Sand_Edge": { "orth": 1, "height":[0,0,1,1] }
 },
 "Water": { 
-	"Water": { "orth": 0, "height": [1,1,1,1]}
+	"Water2": { "orth": 0, "height": [1,1,1,1]}
 },
 "Land": {
 	"Hill_Flat": { "orth": 0, "height": [1,1,1,1]},

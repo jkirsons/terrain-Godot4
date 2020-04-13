@@ -21,7 +21,7 @@ func _process(delta):
 		
 		if waterGridMap:
 			waterGridMap.clear()
-			fillRect(-20, -20, 0, 40, 40, waterGridMap, "Water")
+			fillRect(-20, -20, 0, 40, 40, waterGridMap, "Water2")
 		
 		if sandGridMap:
 			sandGridMap.clear()

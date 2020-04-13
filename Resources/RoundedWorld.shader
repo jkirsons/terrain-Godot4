@@ -1,11 +1,9 @@
-[gd_resource type="ShaderMaterial" load_steps=3 format=2]
-
-[ext_resource path="res://Resources/endesga-32-1x.png" type="Texture" id=1]
-
-[sub_resource type="Shader" id=1]
-code = "shader_type spatial;
+shader_type spatial;
 render_mode world_vertex_coords, depth_draw_alpha_prepass;//, cull_disabled;//, vertex_lighting;
 
+// Rounded World
+uniform float world_roundness = 25.0;
+uniform float world_falloff = 3.0;
 uniform sampler2D BASE_TEX;
 
 void vertex() {
@@ -15,17 +13,10 @@ void vertex() {
 
 void fragment() {
 	vec4 tex = texture(BASE_TEX, UV);
-	//if(tex.a < 0.3) {
-	//	discard;
-	//}
 
 	ALBEDO = tex.rgb;
 	ALPHA = tex.a;
 	//METALLIC = 0.0;
 	//SPECULAR = 0.0;
 	ROUGHNESS = 1.0;	
-}"
-
-[resource]
-shader = SubResource( 1 )
-shader_param/BASE_TEX = ExtResource( 1 )
+}

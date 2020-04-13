@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/YhNiKlc.png-a059bd9d4242a3d6774b6da8b6a22f28.s3tc.stex"
-path.etc2="res://.import/YhNiKlc.png-a059bd9d4242a3d6774b6da8b6a22f28.etc2.stex"
+path.s3tc="res://.import/Texture_RG.png-c0c7b069af44fd01f8e571c5a9d0e1d1.s3tc.stex"
+path.etc2="res://.import/Texture_RG.png-c0c7b069af44fd01f8e571c5a9d0e1d1.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://Resources/YhNiKlc.png"
-dest_files=[ "res://.import/YhNiKlc.png-a059bd9d4242a3d6774b6da8b6a22f28.s3tc.stex", "res://.import/YhNiKlc.png-a059bd9d4242a3d6774b6da8b6a22f28.etc2.stex" ]
+source_file="res://Resources/Texture_RG.png"
+dest_files=[ "res://.import/Texture_RG.png-c0c7b069af44fd01f8e571c5a9d0e1d1.s3tc.stex", "res://.import/Texture_RG.png-c0c7b069af44fd01f8e571c5a9d0e1d1.etc2.stex" ]
 
 [params]
 
@@ -25,7 +25,7 @@ flags/repeat=true
 flags/filter=true
 flags/mipmaps=true
 flags/anisotropic=false
-flags/srgb=2
+flags/srgb=1
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
