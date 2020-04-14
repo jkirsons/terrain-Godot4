@@ -21,20 +21,24 @@ func _physics_process(delta):
 	if fixedMode:
 		desired_velocity = input * max_speed
 	else:
-		desired_velocity = global_transform.basis.xform(Vector3(0,0,input.z).normalized() * max_speed)
+		desired_velocity = global_transform.basis.xform(Vector3(0,0,input.z) * max_speed)
 
 	velocity.x = desired_velocity.x
 	velocity.z = desired_velocity.z
 	velocity = move_and_slide(velocity, Vector3.UP, true)
-	anim.set("parameters/Idle_Run/blend_amount", input.length())
+	if fixedMode:
+		anim.set("parameters/Idle_Run/blend_amount", input.length())
+	else:
+		anim.set("parameters/Idle_Run/blend_amount", abs(input.z))
 
 	if(input != Vector3.ZERO and fixedMode):
-		var dir = input.rotated(Vector3.UP, -PI/2.0)
+		var dir = input.rotated(Vector3.UP, -PI/2.0).normalized()
 		transform.basis = Basis(dir, Vector3.UP, dir.cross(Vector3.UP))
 	if(input != Vector3.ZERO and not fixedMode):
 		var angle = min(PI/2, Vector3.FORWARD.angle_to(input)) * sign(input.x) * -1
 		var turnBasis = Basis(Vector3.UP, angle)
 		global_transform.basis = global_transform.basis * Basis().slerp(turnBasis, delta * turn_speed)
+		#global_transform.basis = global_transform.basis.rotated(Vector3.UP, angle * delta * turn_speed)
 
 func get_input():
 	var input_dir = Vector3()
@@ -45,4 +49,4 @@ func get_input():
 	for action in inputs:
 		if Input.is_action_pressed(action):
 			input_dir += inputs[action] * Input.get_action_strength(action)
-	return input_dir.normalized()
+	return input_dir#.normalized()
