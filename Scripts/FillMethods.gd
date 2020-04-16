@@ -2,11 +2,11 @@ extends Spatial
 
 # Y-axis rotations for rotating tiles
 var basisList = [
-	Basis().get_orthogonal_index(),
-	Basis( Quat(Vector3(0, 1, 0), deg2rad(90)) ).get_orthogonal_index(),
-	Basis( Quat(Vector3(0, 1, 0), deg2rad(180)) ).get_orthogonal_index(),
-	Basis( Quat(Vector3(0, 1, 0), deg2rad(270)) ).get_orthogonal_index()
-	]
+		Basis().get_orthogonal_index(),
+		Basis( Quat(Vector3(0, 1, 0), deg2rad(90)) ).get_orthogonal_index(),
+		Basis( Quat(Vector3(0, 1, 0), deg2rad(180)) ).get_orthogonal_index(),
+		Basis( Quat(Vector3(0, 1, 0), deg2rad(270)) ).get_orthogonal_index()
+		]
 
 var surrounding = [[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0]]
 

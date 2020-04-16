@@ -1,5 +1,6 @@
 tool
-extends "res://Scripts/FillMethods.gd"
+#extends "res://Scripts/FillMethods.gd"
+extends "res://Scripts/WaveFunction.gd"
 
 export var sandPath : NodePath
 export var waterPath : NodePath
@@ -10,15 +11,16 @@ onready var sandGridMap : GridMap = get_node(sandPath)
 onready var waterGridMap : GridMap = get_node(waterPath)
 onready var landGridMap : GridMap = get_node(landPath)
 
+
 func _ready():
 	#if Engine.editor_hint:
-	loadTiles()
+	#loadTiles()
 	updateScene = true
 
 func _process(delta):
 	if updateScene:
+		"""
 		loadTiles()
-		
 		if waterGridMap:
 			waterGridMap.clear()
 			fillRect(-20, -20, 0, 40, 40, waterGridMap, "Water2")
@@ -30,5 +32,6 @@ func _process(delta):
 		if landGridMap:
 			landGridMap.clear()
 			fillCircle (0, 5, 0, 2, landGridMap, "Hill_Flat")
+		"""
 		
 		updateScene = false
