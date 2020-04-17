@@ -1,4 +1,4 @@
-extends Spatial
+#extends Spatial
 #class_name WaveFunction
 # https://github.com/robert/wavefunction-collapse
 
@@ -10,7 +10,8 @@ class CompatibilityOracle:
 	so simple that it perhaps doesn't need to be a class, but I think
 	it helps keep things clear.
 	"""
-
+	var data = []
+	
 	func _init(data):
 		self.data = data
 
@@ -31,7 +32,7 @@ class Wavefunction:
 		weights -- a dict of tile -> weight of tile
 		"""
 		var coefficients = Wavefunction.init_coefficients(size, weights.keys())
-		return Wavefunction.New(coefficients, weights)
+		return Wavefunction.new(coefficients, weights)
 
 	static func init_coefficients(size, tiles):
 		"""Initializes a 2-D wavefunction matrix of coefficients.
@@ -166,7 +167,10 @@ class Model:
 	"""The Model class is responsible for orchestrating the
 	Wavefunction Collapse algorithm.
 	"""
-
+	var output_size
+	var compatibility_oracle
+	var wavefunction
+	
 	func _init(output_size, weights, compatibility_oracle):
 		self.output_size = output_size
 		self.compatibility_oracle = compatibility_oracle
@@ -193,7 +197,7 @@ class Model:
 		# 3. Propagate the consequences of this collapse
 		self.propagate(co_ords)
 
-	func valid_dirs(cur_co_ord, matrix_size):
+	static func valid_dirs(cur_co_ord, matrix_size):
 		"""Returns the valid directions from `cur_co_ord` in a matrix
 		of `matrix_size`. Ensures that we don't try to take step to the
 		left when we are already on the left edge of the matrix.
@@ -273,7 +277,7 @@ class Model:
 
 		return min_entropy_coords
 
-	func parse_matrix(matrix):
+	static func parse_matrix(matrix):
 		"""Parses an example `matrix`. Extracts:
 		
 		1. Tile compatibilities - which pairs of tiles can be placed next
@@ -288,19 +292,18 @@ class Model:
 		* A dict of weights of the form tile -> weight
 		"""
 		var compatibilities = []
-		var matrix_width = len(matrix)
-		var matrix_height = len(matrix[0])
+		var matrix_size = len(matrix)
 	
 		var weights = {}
 	
-		for x in range(matrix.size()):
-			for y in range(matrix[x].size()):
-				if not matrix[x][y] in weights:
-					weights[matrix[x][y]] = 0
-				weights[matrix[x][y]] += 1
-	
-				for d in valid_dirs([x,y], [matrix_width, matrix_height]):
-					var other_tile = matrix[x+d[0]][y+d[1]]
-					compatibilities.append([matrix[x][y], other_tile, d])
+		for key in matrix:
+			if not key in weights:
+				weights[matrix[key]] = 0
+			weights[matrix[key]] += 1
+
+			for d in DIRS:
+				var other_tile_pos = Vector3(key.x+d[0], key.y, key.z+d[1])
+				if other_tile_pos in matrix:
+					compatibilities.append([matrix[key], matrix[other_tile_pos], d])
 	
 		return [compatibilities, weights]
