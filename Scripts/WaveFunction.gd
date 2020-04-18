@@ -12,70 +12,67 @@ class CompatibilityOracle:
 	"""
 	var data = []
 	
-	func _init(data):
-		self.data = data
+	func _init(data_in):
+		data = data_in
 
 	func check(tile1, tile2, direction):
-		return [tile1, tile2, direction] in self.data
+		return [tile1, tile2, direction] in data
 
 class Wavefunction:
 
 	"""The Wavefunction class is responsible for storing which tiles
 	are permitted and forbidden in each location of an output image.
 	"""
-
-	static func mk(size, weights):
+	var coefficients = []
+	var weights = {}
+	
+	static func mk(size, weights_in):
 		"""Initialize a new Wavefunction for a grid of `size`,
 		where the different tiles have overall weights `weights`.
 		Arguments:
 		size -- a 2-tuple of (width, height)
 		weights -- a dict of tile -> weight of tile
 		"""
-		var coefficients = Wavefunction.init_coefficients(size, weights.keys())
-		return Wavefunction.new(coefficients, weights)
+		var coef = Wavefunction.init_coefficients(size, weights_in.keys())
+		return Wavefunction.new(coef, weights_in)
 
 	static func init_coefficients(size, tiles):
 		"""Initializes a 2-D wavefunction matrix of coefficients.
 		The matrix has size `size`, and each element of the matrix
 		starts with all tiles as possible. No tile is forbidden yet.
-		NOTE: coefficients is a slight misnomer, since they are a
-		set of possible tiles instead of a tile -> number/bool dict. This
-		makes the code a little simpler. We keep the name `coefficients`
-		for consistency with other descriptions of Wavefunction Collapse.
 		Arguments:
 		size -- a 2-tuple of (width, height)
 		tiles -- a set of all the possible tiles
 		Returns:
 		A 2-D matrix in which each element is a set
 		"""
-		var coefficients = []
-
+		var coef = []
 		for x in range(size[0]):
 			var row = []
 			for y in range(size[1]):
 				row.append(tiles)
-			coefficients.append(row)
+			coef.append(row)
 
-		return coefficients
+		return coef
 
-	func _init(coefficients, weights):
-		self.coefficients = coefficients
-		self.weights = weights
+	func _init(coef_in, weights_in):
+		coefficients = coef_in.duplicate(true)
+		weights = weights_in.duplicate(true)
 
 	func get(co_ords):
 		"""Returns the set of possible tiles at `co_ords`"""
 		var x = co_ords[0]
 		var y = co_ords[1]
-		return self.coefficients[x][y]
+		return coefficients[x][y]
 
 	func get_collapsed(co_ords):
 		"""Returns the only remaining possible tile at `co_ords`.
 		If there is not exactly 1 remaining possible tile then
 		this method raises an exception.
 		"""
-		var opts = self.get(co_ords)
+		var opts = get(co_ords)
 		assert(len(opts) == 1)
-		return opts.values()[0]
+		return opts[0]
 
 	func get_all_collapsed():
 		"""Returns a 2-D matrix of the only remaining possible
@@ -83,14 +80,14 @@ class Wavefunction:
 		does not have exactly 1 remaining possible tile then
 		this method raises an exception.
 		"""
-		var width = len(self.coefficients)
-		var height = len(self.coefficients[0])
+		var width = len(coefficients)
+		var height = len(coefficients[0])
 
 		var collapsed = []
 		for x in range(width):
 			var row = []
 			for y in range(height):
-				row.append(self.get_collapsed([x,y]))
+				row.append(get_collapsed([x,y]))
 			collapsed.append(row)
 
 		return collapsed
@@ -113,46 +110,42 @@ class Wavefunction:
 
 
 	func is_fully_collapsed():
-		"""Returns true if every element in Wavefunction is fully
-		collapsed, and false otherwise.
-		"""
-		for row in self.coefficients:
+		# Returns true if every element in Wavefunction is fully collapsed, and false otherwise.
+		for row in coefficients:
 			for sq in row:
 				if len(sq) > 1:
 					return false
-
 		return true
 
 	func collapse(co_ords):
 		"""Collapses the wavefunction at `co_ords` to a single, definite
 		tile. The tile is chosen randomly from the remaining possible tiles
-		at `co_ords`, weighted according to the Wavefunction's global
-		`weights`.
+		at `co_ords`, weighted according to the Wavefunction's global `weights`.
 		This method mutates the Wavefunction, and does not return anything.
 		"""
 		var x = co_ords[0]
 		var y = co_ords[1]
-		var opts = self.coefficients[x][y]
+		var opts = coefficients[x][y]
 		#valid_weights = {tile: weight for [tile, weight] in self.weights.items() if tile in opts}
 		var valid_weights = {}
-		for tile in self.weights:
+		for tile in weights:
 			if tile in opts:
-				valid_weights[tile] = self.weights[tile]
+				valid_weights[tile] = weights[tile]
 
 		var total_weights = 0
 		for tile in valid_weights:
 			total_weights += valid_weights[tile]
 			
-		var rnd = randi() % total_weights
+		var rnd = randf() * total_weights
 
 		var chosen = null
 		for tile in valid_weights:
 			rnd -= valid_weights[tile]
 			if rnd < 0:
-				chosen = { tile: valid_weights[tile] }
+				chosen = [tile, valid_weights[tile]]
 				break
 
-		self.coefficients[x][y] = chosen
+		coefficients[x][y] = [chosen[0]]
 
 	func constrain(co_ords, forbidden_tile):
 		"""Removes `forbidden_tile` from the list of possible tiles
@@ -161,7 +154,7 @@ class Wavefunction:
 		"""
 		var x = co_ords[0]
 		var y = co_ords[1]
-		self.coefficients[x][y].remove(forbidden_tile)
+		coefficients[x][y].erase(forbidden_tile)
 
 class Model:
 	"""The Model class is responsible for orchestrating the
@@ -171,31 +164,30 @@ class Model:
 	var compatibility_oracle
 	var wavefunction
 	
-	func _init(output_size, weights, compatibility_oracle):
-		self.output_size = output_size
-		self.compatibility_oracle = compatibility_oracle
-
-		self.wavefunction = Wavefunction.mk(output_size, weights)
+	func _init(output_size_in, weights, compatibility_oracle_in):
+		output_size = output_size_in
+		compatibility_oracle = compatibility_oracle_in
+		wavefunction = Wavefunction.mk(output_size, weights)
 
 	func run():
 		"""Collapses the Wavefunction until it is fully collapsed,
 		then returns a 2-D matrix of the final, collapsed state.
 		"""
-		while not self.wavefunction.is_fully_collapsed():
-			self.iterate()
+		while not wavefunction.is_fully_collapsed():
+			iterate()
 
-		return self.wavefunction.get_all_collapsed()
+		return wavefunction.get_all_collapsed()
 
 	func iterate():
 		"""Performs a single iteration of the Wavefunction Collapse
 		Algorithm.
 		"""
 		# 1. Find the co-ordinates of minimum entropy
-		var co_ords = self.min_entropy_co_ords()
+		var co_ords = min_entropy_co_ords()
 		# 2. Collapse the wavefunction at these co-ordinates
-		self.wavefunction.collapse(co_ords)
+		wavefunction.collapse(co_ords)
 		# 3. Propagate the consequences of this collapse
-		self.propagate(co_ords)
+		propagate(co_ords)
 
 	static func valid_dirs(cur_co_ord, matrix_size):
 		"""Returns the valid directions from `cur_co_ord` in a matrix
@@ -211,7 +203,7 @@ class Model:
 		for dir in DIRS:
 			var new_x = x + dir[0]
 			var new_y = y + dir[1]
-			if -1 < new_x <  width and -1 < new_y < height:
+			if -1 < new_x and new_x <  width and -1 < new_y and new_y < height:
 				dirs.append(dir)
 		
 		return dirs
@@ -227,23 +219,23 @@ class Model:
 		var stack = [co_ords]
 
 		while len(stack) > 0:
-			var cur_coords = stack.pop()
+			var cur_coords = stack.pop_back()
 			# Get the set of all possible tiles at the current location
-			var cur_possible_tiles = self.wavefunction.get(cur_coords)
+			var cur_possible_tiles = wavefunction.get(cur_coords)
 
 			# Iterate through each location immediately adjacent to the
 			# current location.
-			for d in valid_dirs(cur_coords, self.output_size):
+			for d in valid_dirs(cur_coords, output_size):
 				var other_coords = [cur_coords[0] + d[0], cur_coords[1] + d[1]]
 
 				# Iterate through each possible tile in the adjacent location's
 				# wavefunction.
-				for other_tile in self.wavefunction.get(other_coords):
+				for other_tile in wavefunction.get(other_coords):
 					# Check whether the tile is compatible with any tile in
 					# the current location's wavefunction.
 					var other_tile_is_possible = false
 					for cur_tile in cur_possible_tiles:
-						if self.compatibility_oracle.check(cur_tile, other_tile, d):
+						if compatibility_oracle.check(cur_tile, other_tile, d):
 							other_tile_is_possible = true
 							break
 					# If the tile is not compatible with any of the tiles in
@@ -251,7 +243,8 @@ class Model:
 					# for it to ever get chosen. We therefore remove it from
 					# the other location's wavefunction.
 					if not other_tile_is_possible:
-						self.wavefunction.constrain(other_coords, other_tile)
+						wavefunction.constrain(other_coords, other_tile)
+						#if not other_coords in stack:
 						stack.append(other_coords)
 
 	func min_entropy_co_ords():
@@ -261,14 +254,12 @@ class Model:
 		var min_entropy = null
 		var min_entropy_coords = null
 
-		var width = self.output_size[0]
-		var height = self.output_size[1]
-		for x in range(width):
-			for y in range(height):
-				if len(self.wavefunction.get([x,y])) == 1:
+		for x in range(output_size[0]):
+			for y in range(output_size[1]):
+				if len(wavefunction.get([x,y])) == 1:
 					continue
 
-				var entropy = self.wavefunction.shannon_entropy([x, y])
+				var entropy = wavefunction.shannon_entropy([x, y])
 				# Add some noise to mix things up a little
 				var entropy_plus_noise = entropy - (randf() / 1000)
 				if min_entropy == null or entropy_plus_noise < min_entropy:
@@ -292,12 +283,10 @@ class Model:
 		* A dict of weights of the form tile -> weight
 		"""
 		var compatibilities = []
-		var matrix_size = len(matrix)
-	
 		var weights = {}
 	
 		for key in matrix:
-			if not key in weights:
+			if not matrix[key] in weights:
 				weights[matrix[key]] = 0
 			weights[matrix[key]] += 1
 
