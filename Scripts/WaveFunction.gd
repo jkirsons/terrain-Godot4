@@ -2,7 +2,8 @@
 #class_name WaveFunction
 # https://github.com/robert/wavefunction-collapse
 
-const DIRS = [[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0]]
+#const DIRS = [[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0]]
+const DIRS = [[0,-1],[1,0],[0,1],[-1,0]]
 
 class CompatibilityOracle:
 	"""The CompatibilityOracle class is responsible for telling us
@@ -61,9 +62,7 @@ class Wavefunction:
 
 	func get(co_ords):
 		"""Returns the set of possible tiles at `co_ords`"""
-		var x = co_ords[0]
-		var y = co_ords[1]
-		return coefficients[x][y]
+		return coefficients[co_ords[0]][co_ords[1]]
 
 	func get_collapsed(co_ords):
 		"""Returns the only remaining possible tile at `co_ords`.
@@ -96,12 +95,9 @@ class Wavefunction:
 		"""Calculates the Shannon Entropy of the wavefunction at
 		`co_ords`.
 		"""
-		var x = co_ords[0]
-		var y = co_ords[1]
-
 		var sum_of_weights = 0
 		var sum_of_weight_log_weights = 0
-		for opt in self.coefficients[x][y]:
+		for opt in self.coefficients[co_ords[0]][co_ords[1]]:
 			var weight = self.weights[opt]
 			sum_of_weights += weight
 			sum_of_weight_log_weights += weight * log(weight)
@@ -123,9 +119,7 @@ class Wavefunction:
 		at `co_ords`, weighted according to the Wavefunction's global `weights`.
 		This method mutates the Wavefunction, and does not return anything.
 		"""
-		var x = co_ords[0]
-		var y = co_ords[1]
-		var opts = coefficients[x][y]
+		var opts = coefficients[co_ords[0]][co_ords[1]]
 		#valid_weights = {tile: weight for [tile, weight] in self.weights.items() if tile in opts}
 		var valid_weights = {}
 		for tile in weights:
@@ -145,21 +139,25 @@ class Wavefunction:
 				chosen = [tile, valid_weights[tile]]
 				break
 
-		coefficients[x][y] = [chosen[0]]
+		coefficients[co_ords[0]][co_ords[1]] = [chosen[0]]
 
 	func constrain(co_ords, forbidden_tile):
 		"""Removes `forbidden_tile` from the list of possible tiles
 		at `co_ords`.
 		This method mutates the Wavefunction, and does not return anything.
 		"""
-		var x = co_ords[0]
-		var y = co_ords[1]
-		coefficients[x][y].erase(forbidden_tile)
+		coefficients[co_ords[0]][co_ords[1]].erase(forbidden_tile)
+		if len(coefficients[co_ords[0]][co_ords[1]]) == 0:
+			print("Forbidden: ", co_ords, " - ", forbidden_tile)
+			for d in DIRS:
+				print("Dir: ", d, " - ", coefficients[co_ords[0]+d[0]][co_ords[1]+d[1]])
+			assert(false)
 
 class Model:
 	"""The Model class is responsible for orchestrating the
 	Wavefunction Collapse algorithm.
 	"""
+		
 	var output_size
 	var compatibility_oracle
 	var wavefunction
@@ -169,16 +167,18 @@ class Model:
 		compatibility_oracle = compatibility_oracle_in
 		wavefunction = Wavefunction.mk(output_size, weights)
 
-	func run():
+	func run(gridmap):
 		"""Collapses the Wavefunction until it is fully collapsed,
 		then returns a 2-D matrix of the final, collapsed state.
 		"""
-		while not wavefunction.is_fully_collapsed():
-			iterate()
+		
+		if not wavefunction.is_fully_collapsed():
+			iterate(gridmap)
 
-		return wavefunction.get_all_collapsed()
+		#return wavefunction.get_all_collapsed()
+		return wavefunction.is_fully_collapsed()
 
-	func iterate():
+	func iterate(gridmap):
 		"""Performs a single iteration of the Wavefunction Collapse
 		Algorithm.
 		"""
@@ -188,6 +188,10 @@ class Model:
 		wavefunction.collapse(co_ords)
 		# 3. Propagate the consequences of this collapse
 		propagate(co_ords)
+		
+		var cell = wavefunction.get(co_ords)
+		if cell.size() == 1:
+			gridmap.set_cell_item(co_ords[0], 0, co_ords[1], cell[0][0], cell[0][1])
 
 	static func valid_dirs(cur_co_ord, matrix_size):
 		"""Returns the valid directions from `cur_co_ord` in a matrix
@@ -217,9 +221,16 @@ class Model:
 		and so on until no consequences remain.
 		"""
 		var stack = [co_ords]
+		var other_tile_is_possible : bool
+		var checked = []
 
 		while len(stack) > 0:
-			var cur_coords = stack.pop_back()
+			var cur_coords = stack.pop_front()
+			
+			#if cur_coords in checked:
+			#	continue
+			#checked.append(cur_coords)
+			
 			# Get the set of all possible tiles at the current location
 			var cur_possible_tiles = wavefunction.get(cur_coords)
 
@@ -227,13 +238,12 @@ class Model:
 			# current location.
 			for d in valid_dirs(cur_coords, output_size):
 				var other_coords = [cur_coords[0] + d[0], cur_coords[1] + d[1]]
-
 				# Iterate through each possible tile in the adjacent location's
 				# wavefunction.
 				for other_tile in wavefunction.get(other_coords):
 					# Check whether the tile is compatible with any tile in
 					# the current location's wavefunction.
-					var other_tile_is_possible = false
+					other_tile_is_possible = false
 					for cur_tile in cur_possible_tiles:
 						if compatibility_oracle.check(cur_tile, other_tile, d):
 							other_tile_is_possible = true
@@ -244,7 +254,7 @@ class Model:
 					# the other location's wavefunction.
 					if not other_tile_is_possible:
 						wavefunction.constrain(other_coords, other_tile)
-						#if not other_coords in stack:
+						#if not other_coords in stack and not other_coords in checked:
 						stack.append(other_coords)
 
 	func min_entropy_co_ords():
@@ -268,6 +278,28 @@ class Model:
 
 		return min_entropy_coords
 
+
+	static func rotate(tuple, times):
+		var basisList = [
+			Basis().get_orthogonal_index(),
+			Basis( Quat(Vector3(0, 1, 0), deg2rad(90)) ).get_orthogonal_index(),
+			Basis( Quat(Vector3(0, 1, 0), deg2rad(180)) ).get_orthogonal_index(),
+			Basis( Quat(Vector3(0, 1, 0), deg2rad(270)) ).get_orthogonal_index()
+			]
+		
+		var index = basisList.find(tuple[1])
+		index += times 
+		if index >= basisList.size():
+			index -= basisList.size()
+		return [tuple[0], basisList[index]]
+		
+	static func rotate_dir(dir, times):
+		var index = DIRS.find(dir)
+		index += times * 1
+		if index >= DIRS.size():
+			index -= DIRS.size()
+		return DIRS[index]
+		
 	static func parse_matrix(matrix):
 		"""Parses an example `matrix`. Extracts:
 		
@@ -284,15 +316,23 @@ class Model:
 		"""
 		var compatibilities = []
 		var weights = {}
-	
+
 		for key in matrix:
-			if not matrix[key] in weights:
-				weights[matrix[key]] = 0
-			weights[matrix[key]] += 1
+			for i in range(4):
+				if not rotate(matrix[key], i) in weights:
+					weights[rotate(matrix[key], i)] = 0
+				weights[rotate(matrix[key], i)] += 1
 
 			for d in DIRS:
 				var other_tile_pos = Vector3(key.x+d[0], key.y, key.z+d[1])
-				if other_tile_pos in matrix:
-					compatibilities.append([matrix[key], matrix[other_tile_pos], d])
-	
+				for i in range(4):
+					if other_tile_pos in matrix and not [rotate(matrix[key], i), rotate(matrix[other_tile_pos], i), rotate_dir(d, i)] in compatibilities:
+						compatibilities.append([rotate(matrix[key], i), rotate(matrix[other_tile_pos], i), rotate_dir(d, i)])
+						
+				# other tile is symetric tile
+				if other_tile_pos in matrix and matrix[other_tile_pos][0] in [9, 15, 16]:
+					for i in range(4):
+						if not [matrix[key], rotate(matrix[other_tile_pos], i), d] in compatibilities:
+							compatibilities.append([matrix[key], rotate(matrix[other_tile_pos], i), d])
+
 		return [compatibilities, weights]

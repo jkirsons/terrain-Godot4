@@ -7,7 +7,7 @@
 render_priority = 1
 shader = ExtResource( 1 )
 shader_param/world_roundness = 25.0
-shader_param/world_falloff = 3.0
+shader_param/world_falloff = 1.0
 shader_param/water_color = Color( 0.213501, 0.458694, 0.621094, 1 )
 shader_param/foam_color = Color( 0.580392, 0.890196, 0.94902, 1 )
 shader_param/foam_depth = 0.17
@@ -19,5 +19,5 @@ shader_param/far = 300.0
 shader_param/wave_amplitude = Vector2( 0.04, 0.05 )
 shader_param/wave_frequency = Vector2( 0.4, 0.4 )
 shader_param/wave_time_factor = Vector2( 2, 2 )
-shader_param/water_height = -0.133
+shader_param/water_height = 0.041
 shader_param/foam_texture = ExtResource( 2 )

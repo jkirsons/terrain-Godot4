@@ -7,8 +7,8 @@ uniform float world_falloff = 3.0;
 uniform sampler2D BASE_TEX;
 
 void vertex() {
-	float dist = length(CAMERA_MATRIX[3].xyz - VERTEX) / 25.0; 
-	VERTEX.y -= pow(dist, 3.0); 
+	float dist = length(CAMERA_MATRIX[3].xyz - VERTEX) / world_roundness; 
+	VERTEX.y -= pow(dist, world_falloff); 
 }
 
 void fragment() {
