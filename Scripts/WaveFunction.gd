@@ -17,7 +17,7 @@ class CompatibilityOracle:
 		data = data_in
 
 	func check(tile1, tile2, direction):
-		return [tile1, tile2, direction] in data
+		return data.has([tile1, tile2, direction])
 
 class Wavefunction:
 
@@ -26,6 +26,7 @@ class Wavefunction:
 	"""
 	var coefficients = []
 	var weights = {}
+	var gridmap : GridMap
 	
 	static func mk(size, weights_in):
 		"""Initialize a new Wavefunction for a grid of `size`,
@@ -123,7 +124,7 @@ class Wavefunction:
 		#valid_weights = {tile: weight for [tile, weight] in self.weights.items() if tile in opts}
 		var valid_weights = {}
 		for tile in weights:
-			if tile in opts:
+			if opts.has(tile):
 				valid_weights[tile] = weights[tile]
 
 		var total_weights = 0
@@ -140,7 +141,8 @@ class Wavefunction:
 				break
 
 		coefficients[co_ords[0]][co_ords[1]] = [chosen[0]]
-
+		print("Collapsed ", co_ords, " to ", chosen[0])
+			
 	func constrain(co_ords, forbidden_tile):
 		"""Removes `forbidden_tile` from the list of possible tiles
 		at `co_ords`.
@@ -152,6 +154,10 @@ class Wavefunction:
 			for d in DIRS:
 				print("Dir: ", d, " - ", coefficients[co_ords[0]+d[0]][co_ords[1]+d[1]])
 			assert(false)
+			
+		if len(coefficients[co_ords[0]][co_ords[1]]) == 1:
+			var cell = coefficients[co_ords[0]][co_ords[1]]
+			gridmap.set_cell_item(co_ords[0], 0, co_ords[1], cell[0][0], cell[0][1])
 
 class Model:
 	"""The Model class is responsible for orchestrating the
@@ -171,6 +177,7 @@ class Model:
 		"""Collapses the Wavefunction until it is fully collapsed,
 		then returns a 2-D matrix of the final, collapsed state.
 		"""
+		wavefunction.gridmap = gridmap
 		
 		if not wavefunction.is_fully_collapsed():
 			iterate(gridmap)
@@ -198,15 +205,13 @@ class Model:
 		of `matrix_size`. Ensures that we don't try to take step to the
 		left when we are already on the left edge of the matrix.
 		"""
-		var x = cur_co_ord[0]
-		var y = cur_co_ord[1]
 		var width = matrix_size[0]
 		var height = matrix_size[1]
 		var dirs = []
 		
 		for dir in DIRS:
-			var new_x = x + dir[0]
-			var new_y = y + dir[1]
+			var new_x = cur_co_ord[0] + dir[0]
+			var new_y = cur_co_ord[1] + dir[1]
 			if -1 < new_x and new_x <  width and -1 < new_y and new_y < height:
 				dirs.append(dir)
 		
@@ -223,13 +228,13 @@ class Model:
 		var stack = [co_ords]
 		var other_tile_is_possible : bool
 		var checked = []
-
+				
 		while len(stack) > 0:
-			var cur_coords = stack.pop_front()
+			var cur_coords = stack.pop_back()
 			
-			#if cur_coords in checked:
-			#	continue
-			#checked.append(cur_coords)
+			if cur_coords in checked:
+				continue
+			checked.append(cur_coords)
 			
 			# Get the set of all possible tiles at the current location
 			var cur_possible_tiles = wavefunction.get(cur_coords)
@@ -240,7 +245,8 @@ class Model:
 				var other_coords = [cur_coords[0] + d[0], cur_coords[1] + d[1]]
 				# Iterate through each possible tile in the adjacent location's
 				# wavefunction.
-				for other_tile in wavefunction.get(other_coords):
+				var possible_other_tiles = wavefunction.get(other_coords).duplicate(true)
+				for other_tile in possible_other_tiles:
 					# Check whether the tile is compatible with any tile in
 					# the current location's wavefunction.
 					other_tile_is_possible = false
@@ -254,8 +260,8 @@ class Model:
 					# the other location's wavefunction.
 					if not other_tile_is_possible:
 						wavefunction.constrain(other_coords, other_tile)
-						#if not other_coords in stack and not other_coords in checked:
-						stack.append(other_coords)
+						if not stack.has(other_coords) and not other_coords in checked:
+							stack.append(other_coords)
 
 	func min_entropy_co_ords():
 		"""Returns the co-ords of the location whose wavefunction has
@@ -282,9 +288,9 @@ class Model:
 	static func rotate(tuple, times):
 		var basisList = [
 			Basis().get_orthogonal_index(),
-			Basis( Quat(Vector3(0, 1, 0), deg2rad(90)) ).get_orthogonal_index(),
-			Basis( Quat(Vector3(0, 1, 0), deg2rad(180)) ).get_orthogonal_index(),
-			Basis( Quat(Vector3(0, 1, 0), deg2rad(270)) ).get_orthogonal_index()
+			Basis( Quat(Vector3(0, 1, 0), deg2rad(-90)) ).get_orthogonal_index(),
+			Basis( Quat(Vector3(0, 1, 0), deg2rad(-180)) ).get_orthogonal_index(),
+			Basis( Quat(Vector3(0, 1, 0), deg2rad(-270)) ).get_orthogonal_index()
 			]
 		
 		var index = basisList.find(tuple[1])
@@ -325,14 +331,29 @@ class Model:
 
 			for d in DIRS:
 				var other_tile_pos = Vector3(key.x+d[0], key.y, key.z+d[1])
+				#assert(not (matrix[key][0] == 2 and other_tile_pos in matrix and matrix[other_tile_pos][0] == 9))
 				for i in range(4):
-					if other_tile_pos in matrix and not [rotate(matrix[key], i), rotate(matrix[other_tile_pos], i), rotate_dir(d, i)] in compatibilities:
-						compatibilities.append([rotate(matrix[key], i), rotate(matrix[other_tile_pos], i), rotate_dir(d, i)])
+					if other_tile_pos in matrix:
+						# Mirrored positions
+						var tuple = [rotate(matrix[key], i), rotate(matrix[other_tile_pos], i), rotate_dir(d, i)]
+						if not tuple in compatibilities:
+							compatibilities.append(tuple)
 						
-				# other tile is symetric tile
-				if other_tile_pos in matrix and matrix[other_tile_pos][0] in [9, 15, 16]:
-					for i in range(4):
-						if not [matrix[key], rotate(matrix[other_tile_pos], i), d] in compatibilities:
-							compatibilities.append([matrix[key], rotate(matrix[other_tile_pos], i), d])
+						# Symetric tiles
+						if matrix[key][0] in [9, 15, 16]:
+							var tuple1 = [rotate(matrix[key], i), matrix[other_tile_pos], d]
+							if not tuple1 in compatibilities:
+								compatibilities.append(tuple1)
+							if matrix[other_tile_pos][0] in [9, 15, 16]:
+								for j in range(4):
+									var tuple3 = [rotate(matrix[key], i), rotate(matrix[other_tile_pos], j), rotate_dir(d, j)]
+									if not tuple3 in compatibilities:
+										compatibilities.append(tuple3)
+										
+						# Symetric tiles
+						if matrix[other_tile_pos][0] in [9, 15, 16]:
+							var tuple2 = [matrix[key], rotate(matrix[other_tile_pos], i), d] 
+							if not tuple2 in compatibilities:
+								compatibilities.append(tuple2)
 
 		return [compatibilities, weights]

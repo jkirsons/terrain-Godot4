@@ -17,7 +17,8 @@ func _ready():
 		pass
 	else:
 		updateScene = true
-
+		
+			
 func _process(delta):
 	if updateScene:
 		updateScene = false
@@ -41,8 +42,12 @@ func _process(delta):
 		var ret = WaveFunction.Model.parse_matrix(input_matrix)
 		var compatibility_oracle = WaveFunction.CompatibilityOracle.new(ret[0])
 		
-		#for d in compatibility_oracle.data:
-		#	print(d)
+		var file = File.new()
+		file.open("res://Compatibility.json", file.WRITE)
+		var ps = PoolStringArray(compatibility_oracle.data)
+		file.store_string(ps.join(", "))
+		file.close()
+
 		for i in templateGridMap.mesh_library.get_item_list():
 			print("Tile: ", i, " - ", templateGridMap.mesh_library.get_item_name(i))
 					
