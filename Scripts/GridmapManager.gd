@@ -16,7 +16,7 @@ func _ready():
 		#loadTiles()
 		pass
 	else:
-		updateScene = true
+		pass#updateScene = true
 		
 			
 func _process(delta):
@@ -32,26 +32,26 @@ func _process(delta):
 		clear()
 		mesh_library = templateGridMap.mesh_library
 		cell_size = templateGridMap.cell_size
-
 		
 		var input_matrix = {}
 		if templateGridMap:
 			for pos in templateGridMap.get_used_cells():
 				input_matrix[pos] = [templateGridMap.get_cell_item(pos.x, pos.y, pos.z), templateGridMap.get_cell_item_orientation(pos.x, pos.y, pos.z)]
 		
-		var ret = WaveFunction.Model.parse_matrix(input_matrix)
-		var compatibility_oracle = WaveFunction.CompatibilityOracle.new(ret[0])
-		
+		var parse = WaveFunction.Parse.new(input_matrix)
+		var compatibility_oracle = WaveFunction.CompatibilityOracle.new(parse.compatibilities)
+		"""
 		var file = File.new()
 		file.open("res://Compatibility.json", file.WRITE)
 		var ps = PoolStringArray(compatibility_oracle.data)
 		file.store_string(ps.join(", "))
 		file.close()
-
+		"""
+		
 		for i in templateGridMap.mesh_library.get_item_list():
 			print("Tile: ", i, " - ", templateGridMap.mesh_library.get_item_name(i))
 					
-		model = WaveFunction.Model.new([30, 30], ret[1], compatibility_oracle)
+		model = WaveFunction.Model.new([60, 60], parse.weights, compatibility_oracle)
 	
 	if not done:
 		done = model.run(self)

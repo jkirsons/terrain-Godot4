@@ -1,7 +1,7 @@
 extends KinematicBody
 
 export var gravity = -10
-export var max_speed = 4
+export var max_speed = 5
 export var turn_speed = 1.2
 export var fixedMode := true
 

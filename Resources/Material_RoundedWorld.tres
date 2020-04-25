@@ -6,5 +6,5 @@
 [resource]
 shader = ExtResource( 2 )
 shader_param/world_roundness = 25.0
-shader_param/world_falloff = 1.0
+shader_param/world_falloff = 3.0
 shader_param/BASE_TEX = ExtResource( 1 )

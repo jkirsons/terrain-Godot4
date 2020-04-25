@@ -7,7 +7,7 @@
 render_priority = 1
 shader = ExtResource( 1 )
 shader_param/world_roundness = 25.0
-shader_param/world_falloff = 1.0
+shader_param/world_falloff = 3.0
 shader_param/water_color = Color( 0.213501, 0.458694, 0.621094, 1 )
 shader_param/foam_color = Color( 0.580392, 0.890196, 0.94902, 1 )
 shader_param/foam_depth = 0.17
