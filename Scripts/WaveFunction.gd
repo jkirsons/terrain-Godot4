@@ -33,19 +33,19 @@ class Wavefunction:
 	func add_cell(co_ords, tiles = null):
 		if tiles == null:
 			tiles = weights.keys()
-		coefficients[Vector2(co_ords[0],co_ords[1])] = tiles
+		coefficients[Vector2(co_ords[0], co_ords[1])] = tiles
 
 	func remove_cell(co_ords):
 		coefficients.erase(co_ords)
 
 	func get(co_ords):
 		"""Returns the set of possible tiles at `co_ords`"""
-		return coefficients[Vector2(co_ords[0],co_ords[1])]
+		return coefficients[Vector2(co_ords[0], co_ords[1])]
 		
-	func set(co_ords, tile, set_tilemap = true):
-		coefficients[Vector2(co_ords[0],co_ords[1])] = [tile]
+	func set(co_ords, tiles, set_tilemap = true):
+		coefficients[Vector2(co_ords[0], co_ords[1])] = tiles
 		if set_tilemap:
-			gridmap.set_cell_item(co_ords[0], 0, co_ords[1], tile[0], tile[1])
+			gridmap.set_cell_item(co_ords[0], 0, co_ords[1], tiles[0][0], tiles[0][1])
 
 	func get_collapsed(co_ords):
 		"""Returns the only remaining possible tile at `co_ords`.
@@ -76,7 +76,7 @@ class Wavefunction:
 		"""Calculates the Shannon Entropy of the wavefunction at `co_ords`."""
 		var sum_of_weights = 0
 		var sum_of_weight_log_weights = 0
-		for opt in self.coefficients[Vector2(co_ords[0],co_ords[1])]:
+		for opt in self.coefficients[Vector2(co_ords[0], co_ords[1])]:
 			var weight = self.weights[opt]
 			sum_of_weights += weight
 			sum_of_weight_log_weights += weight * log(weight)
@@ -95,7 +95,7 @@ class Wavefunction:
 		at `co_ords`, weighted according to the Wavefunction's global `weights`.
 		This method mutates the Wavefunction, and does not return anything.
 		"""
-		var opts = coefficients[Vector2(co_ords[0],co_ords[1])]
+		var opts = coefficients[Vector2(co_ords[0], co_ords[1])]
 		#valid_weights = {tile: weight for [tile, weight] in self.weights.items() if tile in opts}
 		var valid_weights = {}
 		for tile in weights:
@@ -115,8 +115,8 @@ class Wavefunction:
 				chosen = [tile, valid_weights[tile]]
 				break
 
-		coefficients[Vector2(co_ords[0],co_ords[1])] = [chosen[0]]
-		#print("Collapsed ", co_ords, " to ", chosen[0])
+		coefficients[Vector2(co_ords[0], co_ords[1])] = [chosen[0]]
+		print("Collapsed ", co_ords, " to ", chosen[0])
 
 class Model:
 	"""The Model class is responsible for orchestrating the
@@ -124,7 +124,7 @@ class Model:
 	"""
 	var compatibility_oracle : CompatibilityOracle
 	var wavefunction : Wavefunction
-	const DIRS = [Vector2(0,-1),Vector2(1,0),Vector2(0,1),Vector2(-1,0)]
+	const DIRS = [Vector2(0,-1), Vector2(1,0), Vector2(0,1), Vector2(-1,0)]
 	
 	func _init(weights, compatibility_oracle_in, gridmap):
 		compatibility_oracle = compatibility_oracle_in
@@ -140,17 +140,22 @@ class Model:
 
 	func updateRadius(co_ords, radius):
 		var noUpdate = true
+		var addedCells = []
 		for x in range(-radius, radius+1):
 			for y in range(-radius, radius+1):
 				if (pow(x,2) + pow(y,2)) <= pow(radius,2):
-					var tile = [co_ords[0]+x, co_ords[1]+y]
-					wavefunction.add_cell(tile)
-					propagate(tile)
-					noUpdate = false;
+					var cell = [co_ords[0]+x, co_ords[1]+y]
+					if not Vector2(cell[0], cell[1]) in wavefunction.coefficients:
+						wavefunction.add_cell(cell)
+						addedCells.append(cell)
+						noUpdate = false;
+		
+		for cell in addedCells:
+			updatePossible(cell)
 		
 		# remove cells no longer in range
 		for cell in wavefunction.coefficients:
-			if (pow(cell[0], 2) + pow(cell[1], 2)) > pow(radius, 2):
+			if (pow(cell.x-co_ords[0], 2) + pow(cell.y-co_ords[1], 2)) > pow(radius, 2):
 				wavefunction.remove_cell(cell)
 		
 		return noUpdate
@@ -189,6 +194,24 @@ class Model:
 				dirs.append(dir)
 		return dirs
 	
+	func updatePossible(co_ords):
+		var cur_possible_tiles = wavefunction.get(co_ords).duplicate(true)
+		var original_len = len(cur_possible_tiles)
+		for d in DIRS:
+			var other_coords = [co_ords[0] + d.x, co_ords[1] + d.y]
+			if not Vector2(other_coords[0], other_coords[1]) in wavefunction.coefficients:
+				continue
+			var possible_other_tiles = wavefunction.get(other_coords)
+			
+			for cur_tile in cur_possible_tiles:
+				for other_tile in possible_other_tiles:
+					if compatibility_oracle.check(cur_tile, other_tile, d):
+						break
+					cur_possible_tiles.erase(cur_tile)
+		if len(cur_possible_tiles) != original_len:
+			wavefunction.set(co_ords, cur_possible_tiles, len(cur_possible_tiles) == 1)
+			propagate(co_ords)
+	
 	func propagate(co_ords):
 		"""Propagates the consequences of the wavefunction at `co_ords`
 		collapsing. If the wavefunction at (x,y) collapses to a fixed tile,
@@ -207,34 +230,29 @@ class Model:
 
 			# Iterate through each location immediately adjacent to the
 			# current location.
-			for d in DIRS: #valid_dirs(cur_coords, output_size):
+			for d in DIRS:
 				var other_coords = [cur_coords[0] + d.x, cur_coords[1] + d.y]
 				if not Vector2(other_coords[0], other_coords[1]) in wavefunction.coefficients:
 					continue
-				# Iterate through each possible tile in the adjacent location's
-				# wavefunction.
-				var possible_other_tiles = wavefunction.get(other_coords).duplicate(true)
-				if possible_other_tiles.size() == 1:
-					continue
 
+				var possible_other_tiles = wavefunction.get(other_coords).duplicate(true)
 				var new_tiles = []
+				# Iterate through each possible tile in the adjacent location's wavefunction.
 				for other_tile in possible_other_tiles:
-					# Check whether the tile is compatible with any tile in
-					# the current location's wavefunction.
 					for cur_tile in cur_possible_tiles:
+						# Check whether the tile is compatible with any tile in the current location's wavefunction.
 						if compatibility_oracle.check(cur_tile, other_tile, d):
 							new_tiles.append(other_tile)
 							break
-
-				# If the tile is not compatible with any of the tiles in
-				# the current location's wavefunction then it is impossible
-				# for it to ever get chosen. We therefore remove it from
-				# the other location's wavefunction.
-				if len(new_tiles)!= len(possible_other_tiles):
-					wavefunction.set(other_coords, new_tiles[0], len(new_tiles) == 1)
+				if new_tiles.empty():
+					print("No possible tiles ", cur_coords, " - ", other_coords, " Current Tiles: ", cur_possible_tiles, " Other Tiles: ", possible_other_tiles)
+					continue
+					
+				if len(new_tiles) != len(possible_other_tiles):
+					wavefunction.set(other_coords, new_tiles, len(new_tiles) == 1)
 					if not stack.has(other_coords):
 						stack.append(other_coords)
-
+				
 	func set(co_ords, tile, propagate = true):
 		wavefunction.set(co_ords, tile)
 		if propagate:

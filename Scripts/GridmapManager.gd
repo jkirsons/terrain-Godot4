@@ -44,7 +44,8 @@ func setup():
 	
 	# Set under player to sand
 	var position = world_to_map(player.global_transform.origin)
-	model.set([position.x, position.z], [15, 0])
+	model.updateRadius([position.x, position.z], 5)
+	model.set([position.x, position.z], [[15, 0]])
 	
 	done = false
 
