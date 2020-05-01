@@ -15,7 +15,6 @@ func _ready():
 	camera.fixedMode = fixedMode
 
 func _physics_process(delta):
-	velocity.y += gravity * delta
 	var input = get_input()
 	var desired_velocity 
 	if fixedMode:
@@ -23,13 +22,14 @@ func _physics_process(delta):
 	else:
 		desired_velocity = global_transform.basis.xform(Vector3(0,0,input.z) * max_speed)
 
-	velocity.x = desired_velocity.x
-	velocity.z = desired_velocity.z
+#	velocity.x = desired_velocity.x
+#	velocity.z = desired_velocity.z
+	
+	velocity = velocity.linear_interpolate(desired_velocity, delta * 8)
+	velocity.y += gravity * delta
+	
 	velocity = move_and_slide(velocity, Vector3.UP, true)
-	if fixedMode:
-		anim.set("parameters/Idle_Run/blend_amount", input.length())
-	else:
-		anim.set("parameters/Idle_Run/blend_amount", abs(input.z))
+	anim.set("parameters/Idle_Run/blend_amount", velocity.length() / max_speed)
 
 	if(input != Vector3.ZERO and fixedMode):
 		var dir = input.rotated(Vector3.UP, -PI/2.0).normalized()

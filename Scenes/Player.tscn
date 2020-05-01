@@ -341,7 +341,7 @@ shape = SubResource( 1 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 5 )
 
 [node name="Camera" type="Camera" parent="Target"]
-transform = Transform( 1, 0, 0, 0, 0.830168, 0.557513, 0, -0.557513, 0.830168, 0, 0, 0 )
+transform = Transform( 1, 0, 0, 0, 0.830168, 0.557513, 0, -0.557513, 0.830168, 0, 4.08096, -4.45338 )
 environment = ExtResource( 3 )
 current = true
 script = ExtResource( 2 )
@@ -356,28 +356,28 @@ depth = 0.6
 transform = Transform( -0.3, 0, -9.77524e-08, 0, 0.3, 0, 9.77524e-08, 0, -0.3, 0, 0, 0 )
 
 [node name="metarig" type="Spatial" parent="Neutral Idle"]
-transform = Transform( 99.0791, 11.8804, 6.49446, -5.70615, -6.85968, 99.6011, 12.2785, -99.0545, -6.1186, 0, 0, 0 )
+transform = Transform( 99.1122, 10.8801, 7.64124, -7.00709, -6.0966, 99.5677, 11.2989, -99.2192, -5.2801, 0, 0, 0 )
 
 [node name="spine" type="Spatial" parent="Neutral Idle/metarig"]
 transform = Transform( 0.999992, 2.04891e-08, 0.00400829, 0.00382441, -0.299408, -0.954118, 0.00120012, 0.954125, -0.299406, 0, 0, 0 )
 
 [node name="spine001" type="Spatial" parent="Neutral Idle/metarig/spine"]
-transform = Transform( 0.997022, -0.0723894, -0.0265783, 0.0770673, 0.923319, 0.376221, -0.00269409, -0.377149, 0.926149, -4.55507e-13, 0.00483726, 9.31325e-10 )
+transform = Transform( 0.996605, -0.0732594, -0.0375732, 0.0820271, 0.922771, 0.376517, 0.00708804, -0.37832, 0.925648, -4.55507e-13, 0.00483726, 9.31325e-10 )
 
 [node name="spine002" type="Spatial" parent="Neutral Idle/metarig/spine/spine001"]
-transform = Transform( 0.994407, -0.10534, -0.00766884, 0.104669, 0.992579, -0.0618934, 0.0141318, 0.0607445, 0.998053, 3.20142e-12, 0.00242547, -2.32831e-11 )
+transform = Transform( 0.993012, -0.115499, -0.024222, 0.113177, 0.990201, -0.0818096, 0.0334336, 0.0784965, 0.996354, 3.20142e-12, 0.00242547, -2.32831e-11 )
 
 [node name="spine003" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002"]
-transform = Transform( 0.995259, -0.0956149, -0.0178379, 0.0967453, 0.99208, 0.0801063, 0.0100372, -0.0814522, 0.996627, -7.67321e-12, 0.00755596, -2.98023e-10 )
+transform = Transform( 0.993867, -0.105282, -0.0338319, 0.107167, 0.992441, 0.0598035, 0.0272799, -0.0630624, 0.997637, -7.67321e-12, 0.00755596, -2.98023e-10 )
 
 [node name="spine004" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003"]
-transform = Transform( 0.995167, 0.021896, 0.0957277, -0.00572308, 0.9861, -0.166056, -0.098033, 0.164706, 0.981459, 1.38778e-19, 0.00616429, 7.45058e-11 )
+transform = Transform( 0.994917, 0.0245723, 0.0976503, -0.00734509, 0.984895, -0.172998, -0.100426, 0.171402, 0.980069, 1.38778e-19, 0.00616429, 7.45058e-11 )
 
 [node name="spine005" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/spine004"]
-transform = Transform( 0.996648, 0.0197005, -0.0794003, -0.0215263, 0.999522, -0.0222044, 0.0789249, 0.0238392, 0.996596, 1.42702e-11, 0.00118271, -1.86012e-10 )
+transform = Transform( 0.996764, 0.021654, -0.0774139, -0.023968, 0.999289, -0.0290879, 0.076729, 0.0308492, 0.996575, 1.42702e-11, 0.00118271, -1.86012e-10 )
 
 [node name="spine006" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/spine004/spine005"]
-transform = Transform( 0.999443, 0.0226567, -0.0245097, -0.0211748, 0.998026, 0.0591188, 0.0258008, -0.0585668, 0.99795, -6.94575e-12, 0.00117268, 2.98061e-10 )
+transform = Transform( 0.999439, 0.0250211, -0.0222717, -0.0238298, 0.99835, 0.052236, 0.023542, -0.0516759, 0.998386, -6.94575e-12, 0.00117268, 2.98061e-10 )
 
 [node name="spine006_end" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/spine004/spine005/spine006"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00588269, 0 )
@@ -393,16 +393,16 @@ mesh = SubResource( 3 )
 material/0 = null
 
 [node name="shoulderL" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003"]
-transform = Transform( 0.135085, 0.975366, -0.174394, -0.0327495, 0.180307, 0.983065, 0.990293, -0.127086, 0.0562994, 0.000570358, 0.00465403, -0.00137034 )
+transform = Transform( 0.0872135, 0.987749, -0.129409, -0.038418, 0.133143, 0.990352, 0.995449, -0.0814005, 0.0495591, 0.000570358, 0.00465403, -0.00137034 )
 
 [node name="upper_armL" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/shoulderL"]
-transform = Transform( -0.103809, -0.137573, 0.985037, -0.985582, -0.118814, -0.12046, 0.133608, -0.98334, -0.123256, -0.000370049, 0.00756212, -0.000924844 )
+transform = Transform( -0.11412, -0.103603, 0.98805, -0.987165, -0.100018, -0.124506, 0.111722, -0.989577, -0.0908593, -0.000370049, 0.00756212, -0.000924844 )
 
 [node name="forearmL" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/shoulderL/upper_armL"]
-transform = Transform( 0.943661, 0.0631598, 0.32483, 0.0388686, 0.953666, -0.298347, -0.328623, 0.294164, 0.897482, -7.45058e-11, 0.00892131, 0 )
+transform = Transform( 0.943127, 0.0481329, 0.32893, 0.0296211, 0.973359, -0.227365, -0.33111, 0.224177, 0.916575, -7.45058e-11, 0.00892131, 0 )
 
 [node name="handL" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/shoulderL/upper_armL/forearmL"]
-transform = Transform( 0.647295, 0.0488319, -0.760674, -0.436862, 0.841548, -0.317724, 0.624628, 0.537971, 0.566062, -5.02914e-10, 0.0116368, 0 )
+transform = Transform( 0.690563, -0.00843245, -0.723223, -0.433377, 0.795728, -0.423085, 0.579056, 0.605595, 0.545846, -5.02914e-10, 0.0116368, 0 )
 
 [node name="handL_end" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/shoulderL/upper_armL/forearmL/handL"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00601674, 0 )
@@ -438,16 +438,16 @@ mesh = SubResource( 7 )
 material/0 = null
 
 [node name="shoulderR" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003"]
-transform = Transform( 0.0162144, -0.992854, 0.118227, 0.0383796, 0.118774, 0.992179, -0.999132, -0.01155, 0.0400312, -0.000570358, 0.00465403, -0.00137034 )
+transform = Transform( -0.0545261, -0.99696, 0.0556626, 0.0404368, 0.053495, 0.997749, -0.997693, 0.0566541, 0.037397, -0.000570358, 0.00465403, -0.00137034 )
 
 [node name="upper_armR" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/shoulderR"]
-transform = Transform( 0.0364738, 0.256956, -0.965735, 0.960534, 0.257653, 0.104832, 0.275761, -0.931445, -0.237417, 0.000370049, 0.00756212, -0.000924844 )
+transform = Transform( 0.00257689, 0.190609, -0.981663, 0.958338, 0.27992, 0.0568677, 0.285627, -0.940911, -0.181947, 0.000370049, 0.00756212, -0.000924844 )
 
 [node name="forearmR" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/shoulderR/upper_armR"]
-transform = Transform( 0.943417, -0.0568315, -0.326702, -0.0349738, 0.962658, -0.268453, 0.329759, 0.264689, 0.9062, 7.45058e-11, 0.00892131, 0 )
+transform = Transform( 0.942962, -0.0423488, -0.330195, -0.0260613, 0.979441, -0.200042, 0.331878, 0.197238, 0.922472, 7.45058e-11, 0.00892131, 0 )
 
 [node name="handR" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/shoulderR/upper_armR/forearmR"]
-transform = Transform( 0.539059, 0.0811207, 0.838353, 0.269288, 0.926509, -0.262802, -0.79806, 0.367424, 0.477598, 5.02914e-10, 0.0116368, 0 )
+transform = Transform( 0.551913, 0.0723563, 0.830757, 0.314564, 0.904567, -0.287765, -0.772296, 0.420148, 0.476481, 5.02914e-10, 0.0116368, 0 )
 
 [node name="handR_end" type="Spatial" parent="Neutral Idle/metarig/spine/spine001/spine002/spine003/shoulderR/upper_armR/forearmR/handR"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00601674, 0 )
@@ -517,13 +517,13 @@ transform = Transform( -0.317259, -0.71191, 0.626522, -0.114636, 0.684597, 0.719
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00465057, 0 )
 
 [node name="thighL" type="Spatial" parent="Neutral Idle/metarig/spine"]
-transform = Transform( 0.946171, 0.23924, -0.218003, 0.0541139, -0.780985, -0.6222, -0.319113, 0.576912, -0.75189, 0.00360821, -0.000173154, 0.00138588 )
+transform = Transform( 0.939104, 0.262757, -0.221454, 0.0666085, -0.771419, -0.63283, -0.337115, 0.579544, -0.741943, 0.00360821, -0.000173154, 0.00138588 )
 
 [node name="shinL" type="Spatial" parent="Neutral Idle/metarig/spine/thighL"]
-transform = Transform( 0.994308, 0.0959924, 0.0462191, -0.0744684, 0.936435, -0.342846, -0.0761919, 0.337453, 0.938254, 7.16682e-11, 0.0123622, -4.88944e-11 )
+transform = Transform( 0.992734, 0.100403, 0.0663249, -0.0708012, 0.933047, -0.352718, -0.0972982, 0.345459, 0.933376, 7.16682e-11, 0.0123622, -4.88944e-11 )
 
 [node name="footL" type="Spatial" parent="Neutral Idle/metarig/spine/thighL/shinL"]
-transform = Transform( 0.98782, -0.114347, -0.105527, 0.155547, 0.743337, 0.650581, 0.00405072, -0.659072, 0.752069, 2.79397e-11, 0.0156258, -1.58325e-10 )
+transform = Transform( 0.985845, -0.123161, -0.113762, 0.167628, 0.737527, 0.654182, 0.0033331, -0.663992, 0.747732, 2.79397e-11, 0.0156258, -1.58325e-10 )
 
 [node name="toeL" type="Spatial" parent="Neutral Idle/metarig/spine/thighL/shinL/footL"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.04192e-10, 0.00467547, 3.72529e-11 )
@@ -568,13 +568,13 @@ mesh = SubResource( 16 )
 material/0 = null
 
 [node name="thighR" type="Spatial" parent="Neutral Idle/metarig/spine"]
-transform = Transform( 0.980901, 0.0931358, 0.170758, 0.15052, -0.919503, -0.363122, 0.123193, 0.38189, -0.915958, -0.0036192, -0.000173154, 0.00135691 )
+transform = Transform( 0.979339, 0.127762, 0.156753, 0.174943, -0.92408, -0.339811, 0.101437, 0.360214, -0.927336, -0.0036192, -0.000173154, 0.00135691 )
 
 [node name="shinR" type="Spatial" parent="Neutral Idle/metarig/spine/thighR"]
-transform = Transform( 0.996436, 0.00372658, 0.0842712, 0.0348434, 0.89163, -0.451422, -0.076821, 0.45275, 0.888322, 1.45519e-13, 0.0123622, -2.98023e-10 )
+transform = Transform( 0.993602, 0.00145478, 0.112928, 0.0462221, 0.907098, -0.418374, -0.103045, 0.420917, 0.901227, 1.45519e-13, 0.0123622, -2.98023e-10 )
 
 [node name="footR" type="Spatial" parent="Neutral Idle/metarig/spine/thighR/shinR"]
-transform = Transform( 0.998407, -0.0385412, -0.0412008, 0.0543272, 0.459844, 0.886337, -0.0152145, -0.887163, 0.461205, 9.31323e-11, 0.0156258, -5.12227e-11 )
+transform = Transform( 0.998174, -0.0408744, -0.0444786, 0.0583311, 0.460805, 0.885582, -0.0157017, -0.88656, 0.462348, 9.31323e-11, 0.0156258, -5.12227e-11 )
 
 [node name="toeR" type="Spatial" parent="Neutral Idle/metarig/spine/thighR/shinR/footR"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.07684e-10, 0.00467547, -9.31323e-11 )

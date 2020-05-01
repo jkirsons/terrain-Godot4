@@ -141,6 +141,9 @@ class Model:
 	func updateRadius(co_ords, radius):
 		var addedCells = []
 		wavefunction.visible_cells = {}
+		var del_radius = radius * 2
+		if fmod(co_ords[0], 2) or fmod(co_ords[1], 2):
+			radius *= 2
 		for x in range(-radius, radius+1):
 			for y in range(-radius, radius+1):
 			#if (pow(x,2) + pow(y,2)) <= pow(radius,2):
@@ -155,9 +158,10 @@ class Model:
 			updatePossible(cell)
 		
 		# remove cells no longer in range
+		
 		for cell in wavefunction.coefficients:
 		#if (pow(cell.x-co_ords[0], 2) + pow(cell.y-co_ords[1], 2)) > pow(radius, 2):
-			if cell.x-co_ords[0] > radius or cell.x-co_ords[0] < -radius or cell.y-co_ords[1] > radius or cell.y-co_ords[1] < -radius:
+			if cell.x-co_ords[0] > del_radius or cell.x-co_ords[0] < -del_radius or cell.y-co_ords[1] > del_radius or cell.y-co_ords[1] < - del_radius:
 				wavefunction.remove_cell(cell)
 				wavefunction.gridmap.set_cell_item(cell.x, 0, cell.y, GridMap.INVALID_CELL_ITEM)
 		
