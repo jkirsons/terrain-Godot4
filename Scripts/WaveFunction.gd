@@ -12,11 +12,7 @@ class CompatibilityOracle:
 		data = data_in
 
 	func check(tile1, tile2, direction):
-		if direction in data:
-			if tile1 in data[direction]:
-				if tile2 in data[direction][tile1]:
-					return true
-		return false
+		return data[direction][tile1].has(tile2)
 
 class Wavefunction:
 	"""The Wavefunction class is responsible for storing which tiles
@@ -25,10 +21,11 @@ class Wavefunction:
 	var coefficients = {}
 	var weights = {}
 	var gridmap : GridMap
-	var visible_cells = {}
+	var default_keys_size := 0
 
 	func _init(weights_in, gridmap):
 		weights = weights_in.duplicate(true)
+		default_keys_size = weights.size()
 		self.gridmap = gridmap
 
 	func add_cell(co_ords, tiles = null):
@@ -45,7 +42,7 @@ class Wavefunction:
 		
 	func set(co_ords, tiles, set_tilemap = true):
 		coefficients[Vector2(co_ords[0], co_ords[1])] = tiles
-		if set_tilemap and Vector2(co_ords[0], co_ords[1]) in visible_cells:
+		if set_tilemap:
 			gridmap.set_cell_item(co_ords[0], 0, co_ords[1], tiles[0][0], tiles[0][1])
 
 	func get_collapsed(co_ords):
@@ -86,7 +83,7 @@ class Wavefunction:
 	func is_fully_collapsed():
 		# Returns true if every element in Wavefunction is fully collapsed, and false otherwise.
 		for cell in coefficients:
-			if len(coefficients[cell]) > 1 and cell in visible_cells:
+			if len(coefficients[cell]) > 1:
 				return false
 		return true
 
@@ -117,7 +114,7 @@ class Wavefunction:
 				break
 
 		coefficients[Vector2(co_ords[0], co_ords[1])] = [chosen[0]]
-		print("Collapsed ", co_ords, " to ", chosen[0])
+		#print("Collapsed ", co_ords, " to ", chosen[0])
 
 class Model:
 	"""The Model class is responsible for orchestrating the
@@ -140,10 +137,9 @@ class Model:
 
 	func updateRadius(co_ords, radius):
 		var addedCells = []
-		wavefunction.visible_cells = {}
-		var del_radius = radius * 2
-		if fmod(co_ords[0], 2) or fmod(co_ords[1], 2):
-			radius *= 2
+		var del_radius = radius# + 5
+		#if fmod(co_ords[0], 5) == 0 or fmod(co_ords[1], 5) == 0:
+		#	radius += 5
 		for x in range(-radius, radius+1):
 			for y in range(-radius, radius+1):
 			#if (pow(x,2) + pow(y,2)) <= pow(radius,2):
@@ -152,19 +148,17 @@ class Model:
 					wavefunction.add_cell(cell)
 					addedCells.append(cell)
 			#if (pow(x,2) + pow(y,2)) <= pow(radius,2):
-				wavefunction.visible_cells[Vector2(co_ords[0]+x, co_ords[1]+y)] = 1
 		
 		for cell in addedCells:
 			updatePossible(cell)
 		
 		# remove cells no longer in range
-		
-		for cell in wavefunction.coefficients:
+		for cell in wavefunction.coefficients.duplicate(true):
 		#if (pow(cell.x-co_ords[0], 2) + pow(cell.y-co_ords[1], 2)) > pow(radius, 2):
-			if cell.x-co_ords[0] > del_radius or cell.x-co_ords[0] < -del_radius or cell.y-co_ords[1] > del_radius or cell.y-co_ords[1] < - del_radius:
-				wavefunction.remove_cell(cell)
+			if cell.x-co_ords[0] > del_radius or cell.x-co_ords[0] < -del_radius or cell.y-co_ords[1] > del_radius or cell.y-co_ords[1] < -del_radius:
 				wavefunction.gridmap.set_cell_item(cell.x, 0, cell.y, GridMap.INVALID_CELL_ITEM)
-		
+				wavefunction.remove_cell(cell)
+				
 		return not addedCells.empty()
 
 	func iterate():
@@ -179,20 +173,38 @@ class Model:
 		propagate(co_ords)
 		
 		var cell = wavefunction.get(co_ords)
-		if cell.size() == 1 and Vector2(co_ords[0], co_ords[1]) in wavefunction.visible_cells:
+		if cell.size() == 1:
 			wavefunction.gridmap.set_cell_item(co_ords[0], 0, co_ords[1], cell[0][0], cell[0][1])
 	
 	func updatePossible(co_ords):
-		var cur_possible_tiles = wavefunction.get(co_ords)
 		var new_possible_tiles = wavefunction.get(co_ords).duplicate(true)
-		var original_len = len(cur_possible_tiles)
+		var original_len = len(new_possible_tiles)
+		
+		# if a neighbour has 1 valid tile, start this tile with the tiles compatible with the neighbour
+		var empty_neighbours := 0
+		for d in DIRS:
+			var other_coords = Vector2(co_ords[0] + d.x, co_ords[1] + d.y)
+			if other_coords in wavefunction.coefficients: 
+				var size = wavefunction.coefficients[other_coords].size()
+				if size == 1:
+					var reverse_dir = DIRS.find(d) - 2
+					new_possible_tiles = compatibility_oracle.data[DIRS[reverse_dir]][wavefunction.coefficients[other_coords][0]].keys()
+					break
+				if size == wavefunction.default_keys_size:
+					empty_neighbours += 1
+			else:
+				empty_neighbours += 1
+		
+		if empty_neighbours == DIRS.size():
+			return
+		
 		for d in DIRS:
 			var other_coords = [co_ords[0] + d.x, co_ords[1] + d.y]
 			if not Vector2(other_coords[0], other_coords[1]) in wavefunction.coefficients:
 				continue
 			var possible_other_tiles = wavefunction.get(other_coords)
 			
-			for cur_tile in cur_possible_tiles:
+			for cur_tile in new_possible_tiles:
 				var compatible = false
 				for other_tile in possible_other_tiles:
 					if compatibility_oracle.check(cur_tile, other_tile, d):
@@ -228,6 +240,11 @@ class Model:
 					continue
 
 				var possible_other_tiles = wavefunction.get(other_coords).duplicate(true)
+				
+				# there is no change to propagate to this tile:
+				if possible_other_tiles.size() == 1:
+					continue
+					
 				var new_tiles = []
 				# Iterate through each possible tile in the adjacent location's wavefunction.
 				for other_tile in possible_other_tiles:
@@ -258,8 +275,6 @@ class Model:
 
 		for cell in wavefunction.coefficients:
 				if len(wavefunction.get([cell.x,cell.y])) == 1:
-					continue
-				if not cell in wavefunction.visible_cells:
 					continue
 
 				var entropy = wavefunction.shannon_entropy([cell.x, cell.y])

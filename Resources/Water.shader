@@ -36,8 +36,8 @@ vec2 faker(vec2 p){
 
 void vertex() {
 	// rounded world	
-	float dist = length(CAMERA_MATRIX[3].xyz - VERTEX) / world_roundness; 
-	VERTEX.y -= pow(dist, world_falloff); 
+	//float dist = length(CAMERA_MATRIX[3].xyz - VERTEX) / world_roundness; 
+	//VERTEX.y -= pow(dist, world_falloff); 
 
 	// wave displacement
 	float noise = faker(VERTEX.xz).x;

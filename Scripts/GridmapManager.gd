@@ -53,14 +53,17 @@ func _process(delta):
 	if not Engine.editor_hint:
 		var currentPos = world_to_map(player.global_transform.origin)
 		if currentPos != lastPlayerPos:
-			done = done and model.updateRadius([currentPos.x, currentPos.z], 5)
+			done = done and model.updateRadius([currentPos.x, currentPos.z], 15)
 			
 	if updateScene:
 		updateScene = false
 		setup()
 	
 	if not done:
-		done = model.run()
+		for i in range(10):
+			done = model.run()
+			if done:
+				break
 
 	"""
 	var file = File.new()

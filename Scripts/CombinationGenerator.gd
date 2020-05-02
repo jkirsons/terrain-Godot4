@@ -27,9 +27,9 @@ func add_tile(tile, other_tile, dir):
 	if not dir in compatibilities:
 		compatibilities[dir] = {}
 	if not tile in compatibilities[dir]:
-		compatibilities[dir][tile] = []
-	if not other_tile in compatibilities[dir][tile]:
-		compatibilities[dir][tile].append(other_tile)
+		compatibilities[dir][tile] = {}
+	if not compatibilities[dir][tile].has(other_tile):
+		compatibilities[dir][tile][other_tile] = 1
 	
 func _init(matrix):
 	"""Parses an example `matrix`. Extracts:
