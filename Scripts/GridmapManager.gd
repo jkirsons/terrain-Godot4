@@ -8,7 +8,6 @@ export var playerPath : NodePath
 onready var player : KinematicBody = get_node(playerPath)
 
 export var updateScene : bool = false
-var done := true
 
 var lastPlayerPos := Vector3()
 
@@ -40,30 +39,30 @@ func setup():
 	mesh_library = templateGridMap.mesh_library
 	cell_size = templateGridMap.cell_size
 	
-	model = WaveFunction.Model.new(parse.weights, compatibility_oracle, self)
+	model = WaveFunction.Model.new(parse.weights, compatibility_oracle)
+	model.connect("tile_ready", self, "_on_Model_tile_ready")
 	
 	# Set under player to sand
 	var position = world_to_map(player.global_transform.origin)
 	model.updateRadius([position.x, position.z], 5)
 	model.set([position.x, position.z], [[15, 0]])
-	
-	done = false
+	model.start()
+
+
+func _on_Model_tile_ready(x, y, z, item, orientation):
+	#set_cell_item(x, y, z, item, orientation)
+	call_deferred("set_cell_item", x, y, z, item, orientation)
 
 func _process(delta):
 	if not Engine.editor_hint:
 		var currentPos = world_to_map(player.global_transform.origin)
 		if currentPos != lastPlayerPos:
-			done = done and model.updateRadius([currentPos.x, currentPos.z], 15)
+			model.updateRadiusThread([currentPos.x, currentPos.z], 15)
 			
 	if updateScene:
 		updateScene = false
 		setup()
-	
-	if not done:
-		for i in range(10):
-			done = model.run()
-			if done:
-				break
+
 
 	"""
 	var file = File.new()

@@ -20,13 +20,13 @@ class Wavefunction:
 	"""
 	var coefficients = {}
 	var weights = {}
-	var gridmap : GridMap
+	var model : Model
 	var default_keys_size := 0
 
-	func _init(weights_in, gridmap):
+	func _init(weights_in, model):
 		weights = weights_in.duplicate(true)
 		default_keys_size = weights.size()
-		self.gridmap = gridmap
+		self.model = model
 
 	func add_cell(co_ords, tiles = null):
 		if tiles == null:
@@ -43,7 +43,8 @@ class Wavefunction:
 	func set(co_ords, tiles, set_tilemap = true):
 		coefficients[Vector2(co_ords[0], co_ords[1])] = tiles
 		if set_tilemap:
-			gridmap.set_cell_item(co_ords[0], 0, co_ords[1], tiles[0][0], tiles[0][1])
+			#gridmap.set_cell_item(co_ords[0], 0, co_ords[1], tiles[0][0], tiles[0][1])
+			model.emit_signal("tile_ready", co_ords[0], 0, co_ords[1], tiles[0][0], tiles[0][1])
 
 	func get_collapsed(co_ords):
 		"""Returns the only remaining possible tile at `co_ords`.
@@ -120,13 +121,26 @@ class Model:
 	"""The Model class is responsible for orchestrating the
 	Wavefunction Collapse algorithm.
 	"""
+	signal tile_ready(x, y, z, item, orientation)
+	
 	var compatibility_oracle : CompatibilityOracle
 	var wavefunction : Wavefunction
 	const DIRS = [Vector2(0,-1), Vector2(1,0), Vector2(0,1), Vector2(-1,0)]
+	var last_coords
+	var radius
+	var update_location := false
+	var mutex
+	var thread
+	var semaphore
 	
-	func _init(weights, compatibility_oracle_in, gridmap):
+	func _init(weights, compatibility_oracle_in):
 		compatibility_oracle = compatibility_oracle_in
-		wavefunction = Wavefunction.new(weights, gridmap)
+		wavefunction = Wavefunction.new(weights, self)
+		semaphore = Semaphore.new()
+		thread = Thread.new()
+	
+	func start():
+		thread.start(self, "runThread")
 
 	func run():
 		"""Collapses the Wavefunction until it is fully collapsed,
@@ -134,12 +148,29 @@ class Model:
 		if not wavefunction.is_fully_collapsed():
 			iterate()
 		return wavefunction.is_fully_collapsed()
+		
+	func runThread(userdata):
+		while true:
+			semaphore.wait()
+			print("Updating Model")
+			if update_location:
+				updateRadius(last_coords, radius)
+				update_location = false
+			while not wavefunction.is_fully_collapsed():
+				iterate()
 
+	func updateRadiusThread(co_ords, radius):
+		if co_ords != last_coords:
+			self.radius = radius
+			last_coords = co_ords
+			update_location = true
+			semaphore.post()
+		
 	func updateRadius(co_ords, radius):
 		var addedCells = []
-		var del_radius = radius# + 5
-		#if fmod(co_ords[0], 5) == 0 or fmod(co_ords[1], 5) == 0:
-		#	radius += 5
+		var del_radius = radius + 5
+		if fmod(co_ords[0], 5) == 0 or fmod(co_ords[1], 5) == 0:
+			radius += 5
 		for x in range(-radius, radius+1):
 			for y in range(-radius, radius+1):
 			#if (pow(x,2) + pow(y,2)) <= pow(radius,2):
@@ -156,7 +187,8 @@ class Model:
 		for cell in wavefunction.coefficients.duplicate(true):
 		#if (pow(cell.x-co_ords[0], 2) + pow(cell.y-co_ords[1], 2)) > pow(radius, 2):
 			if cell.x-co_ords[0] > del_radius or cell.x-co_ords[0] < -del_radius or cell.y-co_ords[1] > del_radius or cell.y-co_ords[1] < -del_radius:
-				wavefunction.gridmap.set_cell_item(cell.x, 0, cell.y, GridMap.INVALID_CELL_ITEM)
+				#wavefunction.gridmap.set_cell_item(cell.x, 0, cell.y, GridMap.INVALID_CELL_ITEM)
+				emit_signal("tile_ready", cell.x, 0, cell.y, GridMap.INVALID_CELL_ITEM, 0)
 				wavefunction.remove_cell(cell)
 				
 		return not addedCells.empty()
@@ -174,7 +206,8 @@ class Model:
 		
 		var cell = wavefunction.get(co_ords)
 		if cell.size() == 1:
-			wavefunction.gridmap.set_cell_item(co_ords[0], 0, co_ords[1], cell[0][0], cell[0][1])
+			#wavefunction.gridmap.set_cell_item(co_ords[0], 0, co_ords[1], cell[0][0], cell[0][1])
+			emit_signal("tile_ready", co_ords[0], 0, co_ords[1], cell[0][0], cell[0][1])
 	
 	func updatePossible(co_ords):
 		var new_possible_tiles = wavefunction.get(co_ords).duplicate(true)
