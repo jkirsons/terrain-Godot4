@@ -1,6 +1,7 @@
 shader_type spatial;
-render_mode unshaded, world_vertex_coords, depth_draw_alpha_prepass;//, cull_disabled;
-
+//render_mode unshaded, world_vertex_coords;//, depth_draw_alpha_prepass;//, cull_disabled;
+//render_mode depth_draw_always;
+render_mode depth_draw_always;
 // Rounded World
 uniform float world_roundness = 25.0;
 uniform float world_falloff = 3.0;
@@ -22,6 +23,12 @@ uniform vec2 wave_frequency = vec2(0.4, 0.4);
 uniform vec2 wave_time_factor = vec2(2.0, 2.0);
 uniform float water_height = 0.0;
 
+vec3 to_world(mat4 world_matrix, vec3 pos)
+{
+	return (world_matrix * vec4(pos, 1.0)).xyz;
+}
+
+
 float height(vec2 pos, float time, float noise){
 	return (wave_amplitude.x * sin(pos.x * wave_frequency.x * noise + time * wave_time_factor.x)) + (wave_amplitude.y * sin(pos.y * wave_frequency.y * noise + time * wave_time_factor.y));
 }
@@ -34,16 +41,19 @@ vec2 faker(vec2 p){
 	return vec2(fake_random(p), fake_random(p*124.32));
 }
 
+
 void vertex() {
 	// rounded world	
-	//float dist = length(CAMERA_MATRIX[3].xyz - VERTEX) / world_roundness; 
-	//VERTEX.y -= pow(dist, world_falloff); 
+	float dist = length(CAMERA_MATRIX[3].xyz - to_world(WORLD_MATRIX, VERTEX)) / world_roundness; 
+	VERTEX -= (vec4(0.0, pow(dist, world_falloff), 0.0, 1.0) * WORLD_MATRIX).xyz;
 
 	// wave displacement
-	float noise = faker(VERTEX.xz).x;
-	VERTEX.y += height(VERTEX.xz, TIME, noise) + water_height;
-	TANGENT = normalize( vec3(0.0, height(VERTEX.xz + vec2(0.0, 0.2), TIME, noise) - height(VERTEX.xz + vec2(0.0, -0.2), TIME, noise), 0.4));
-	BINORMAL = normalize( vec3(0.4, height(VERTEX.xz + vec2(0.2, 0.0), TIME, noise) - height(VERTEX.xz + vec2(-0.2, 0.0), TIME, noise), 0.0));
+	vec3 vertex = to_world(WORLD_MATRIX, VERTEX);
+	
+	float noise = faker(vertex.xz).x;
+	VERTEX.y += height(vertex.xz, TIME, noise) + water_height;
+	TANGENT = normalize( vec3(0.0, height(vertex.xz + vec2(0.0, 0.2), TIME, noise) - height(vertex.xz + vec2(0.0, -0.2), TIME, noise), 0.4));
+	BINORMAL = normalize( vec3(0.4, height(vertex.xz + vec2(0.2, 0.0), TIME, noise) - height(vertex.xz + vec2(-0.2, 0.0), TIME, noise), 0.0));
 	NORMAL = cross(TANGENT, BINORMAL);	
 
 }
@@ -56,6 +66,7 @@ float linearize(float c_depth) {
 void fragment()
 {
 	// edge foam
+	//float zdepth = texture(DEPTH_TEXTURE, UV.xy).r;
     float zdepth = linearize(texture(DEPTH_TEXTURE, SCREEN_UV).x);
     float zpos = linearize(FRAGCOORD.z);
     float diff = zdepth - zpos;
@@ -65,5 +76,9 @@ void fragment()
     diff += displ.x;
    
     vec4 col = mix(foam_color, water_color, step(foam_depth, diff));
-    ALBEDO = col.rgb;
+    
+	if(false) {
+		ALBEDO = vec3(0.0, 0.0, zdepth / 50.0);
+	} else
+	ALBEDO = col.rgb;
 }

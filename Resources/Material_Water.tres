@@ -1,16 +1,16 @@
 [gd_resource type="ShaderMaterial" load_steps=3 format=2]
 
 [ext_resource path="res://Resources/Water.shader" type="Shader" id=1]
-[ext_resource path="res://Resources/Texture_RG.png" type="Texture" id=2]
+[ext_resource path="res://Resources/Texture_RG.png" type="Texture2D" id=2]
 
 [resource]
 render_priority = 1
 shader = ExtResource( 1 )
 shader_param/world_roundness = 25.0
 shader_param/world_falloff = 3.0
-shader_param/water_color = Color( 0.213501, 0.458694, 0.621094, 1 )
+shader_param/water_color = Color( 0.0666667, 0.27451, 0.411765, 1 )
 shader_param/foam_color = Color( 0.580392, 0.890196, 0.94902, 1 )
-shader_param/foam_depth = 0.17
+shader_param/foam_depth = 1.0
 shader_param/foam_y_stretch = 0.15
 shader_param/foam_x_stretch = 1.0
 shader_param/foam_speed = 7.0

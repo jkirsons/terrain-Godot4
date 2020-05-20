@@ -1,4 +1,4 @@
-extends KinematicBody
+extends KinematicBody3D
 
 export var gravity = -10
 export var max_speed = 5
@@ -25,7 +25,7 @@ func _physics_process(delta):
 #	velocity.x = desired_velocity.x
 #	velocity.z = desired_velocity.z
 	
-	velocity = velocity.linear_interpolate(desired_velocity, delta * 8)
+	velocity = velocity.lerp(desired_velocity, delta * 8)
 	velocity.y += gravity * delta
 	
 	velocity = move_and_slide(velocity, Vector3.UP, true)

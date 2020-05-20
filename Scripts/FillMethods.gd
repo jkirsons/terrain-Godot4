@@ -1,4 +1,4 @@
-extends Spatial
+extends Node3D
 
 # Y-axis rotations for rotating tiles
 var basisList = [

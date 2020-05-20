@@ -1,5 +1,5 @@
 tool
-extends Spatial
+extends Node3D
 
 func _ready():
 	# Change tile materials to shader versions

@@ -1,7 +1,7 @@
 [remap]
 
 importer="texture"
-type="StreamTexture"
+type="StreamTexture2D"
 path.s3tc="res://.import/Texture_RG.png-c0c7b069af44fd01f8e571c5a9d0e1d1.s3tc.stex"
 path.etc2="res://.import/Texture_RG.png-c0c7b069af44fd01f8e571c5a9d0e1d1.etc2.stex"
 metadata={
@@ -18,19 +18,19 @@ dest_files=[ "res://.import/Texture_RG.png-c0c7b069af44fd01f8e571c5a9d0e1d1.s3tc
 
 compress/mode=2
 compress/lossy_quality=0.7
-compress/hdr_mode=0
+compress/hdr_compression=1
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=true
-flags/filter=true
-flags/mipmaps=true
-flags/anisotropic=false
-flags/srgb=1
+compress/channel_pack=0
+compress/streamed=false
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
 process/fix_alpha_border=true
 process/premult_alpha=false
-process/HDR_as_SRGB=false
 process/invert_color=false
-stream=false
-size_limit=0
-detect_3d=false
+process/HDR_as_SRGB=false
+process/size_limit=0
+detect_3d/compress_to=0
 svg/scale=1.0

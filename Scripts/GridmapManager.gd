@@ -1,11 +1,11 @@
-tool
+#tool
 extends GridMap
 
 export var templatePath : NodePath
 onready var templateGridMap : GridMap = get_node(templatePath)
 
 export var playerPath : NodePath
-onready var player : KinematicBody = get_node(playerPath)
+onready var player : Node3D = get_node(playerPath)
 
 export var updateScene : bool = false
 
@@ -40,7 +40,10 @@ func setup():
 	cell_size = templateGridMap.cell_size
 	
 	model = WaveFunction.Model.new(parse.weights, compatibility_oracle)
-	model.connect("tile_ready", self, "_on_Model_tile_ready")
+	var self_var = self
+	model.connect("tile_ready", Callable(self_var, "_on_Model_tile_ready"))
+#	model.tile_ready.connect(self._on_Model_tile_ready)
+	
 	
 	# Set under player to sand
 	var position = world_to_map(player.global_transform.origin)

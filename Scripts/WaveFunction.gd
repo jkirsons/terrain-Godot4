@@ -22,11 +22,14 @@ class Wavefunction:
 	var weights = {}
 	var model : Model
 	var default_keys_size := 0
+	var log_weights = {}
 
 	func _init(weights_in, model):
 		weights = weights_in.duplicate(true)
 		default_keys_size = weights.size()
 		self.model = model
+		for weight in weights:
+			log_weights[weight] = weights[weight] * log(weights[weight])
 
 	func add_cell(co_ords, tiles = null):
 		if tiles == null:
@@ -78,7 +81,7 @@ class Wavefunction:
 		for opt in self.coefficients[Vector2(co_ords[0], co_ords[1])]:
 			var weight = self.weights[opt]
 			sum_of_weights += weight
-			sum_of_weight_log_weights += weight * log(weight)
+			sum_of_weight_log_weights += log_weights[opt] #weight * log(weight)
 		return log(sum_of_weights) - (sum_of_weight_log_weights / sum_of_weights)
 
 	func is_fully_collapsed():
@@ -132,6 +135,9 @@ class Model:
 	var mutex
 	var thread
 	var semaphore
+	var entropy_buffer = {}
+	
+	var threaded := true
 	
 	func _init(weights, compatibility_oracle_in):
 		compatibility_oracle = compatibility_oracle_in
@@ -140,7 +146,10 @@ class Model:
 		thread = Thread.new()
 	
 	func start():
-		thread.start(self, "runThread")
+		if not threaded:
+			runThread(true)
+		else:
+			thread.start(self, "runThread")
 
 	func run():
 		"""Collapses the Wavefunction until it is fully collapsed,
@@ -151,13 +160,15 @@ class Model:
 		
 	func runThread(userdata):
 		while true:
-			semaphore.wait()
-			print("Updating Model")
+			if threaded:
+				semaphore.wait()
 			if update_location:
 				updateRadius(last_coords, radius)
 				update_location = false
 			while not wavefunction.is_fully_collapsed():
 				iterate()
+			if not threaded:
+				break
 
 	func updateRadiusThread(co_ords, radius):
 		if co_ords != last_coords:
@@ -165,6 +176,8 @@ class Model:
 			last_coords = co_ords
 			update_location = true
 			semaphore.post()
+			if not threaded:
+				runThread(true)
 		
 	func updateRadius(co_ords, radius):
 		var addedCells = []
@@ -305,12 +318,17 @@ class Model:
 		"""Returns the co-ords of the location whose wavefunction has the lowest entropy. """
 		var min_entropy = null
 		var min_entropy_coords = null
-
+		var entropy = null
+		
 		for cell in wavefunction.coefficients:
 				if len(wavefunction.get([cell.x,cell.y])) == 1:
 					continue
-
-				var entropy = wavefunction.shannon_entropy([cell.x, cell.y])
+				var key = wavefunction.coefficients[cell].hash()
+				if entropy_buffer.has(key):
+					entropy = entropy_buffer[key]
+				else:
+					entropy = wavefunction.shannon_entropy([cell.x, cell.y])
+					entropy_buffer[key] = entropy
 				# Add some noise to mix things up a little
 				var entropy_plus_noise = entropy - (randf() / 1000)
 				if min_entropy == null or entropy_plus_noise < min_entropy:
