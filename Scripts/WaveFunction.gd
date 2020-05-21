@@ -12,7 +12,9 @@ class CompatibilityOracle:
 		data = data_in
 
 	func check(tile1, tile2, direction):
-		return data[direction][tile1].has(tile2)
+		if tile1[0] != 22:
+			return data[direction][tile1].has(tile2)
+		
 
 class Wavefunction:
 	"""The Wavefunction class is responsible for storing which tiles
@@ -285,27 +287,31 @@ class Model:
 				if not Vector2(other_coords[0], other_coords[1]) in wavefunction.coefficients:
 					continue
 
-				var possible_other_tiles = wavefunction.get(other_coords).duplicate(true)
+				var possible_other_tiles = wavefunction.get(other_coords)
+				var new_possible_other_tiles = wavefunction.get(other_coords).duplicate(true)
 				
 				# there is no change to propagate to this tile:
 				if possible_other_tiles.size() == 1:
 					continue
-					
-				var new_tiles = []
+				var removed = false
 				# Iterate through each possible tile in the adjacent location's wavefunction.
 				for other_tile in possible_other_tiles:
+					var other_possible = false
 					for cur_tile in cur_possible_tiles:
 						# Check whether the tile is compatible with any tile in the current location's wavefunction.
 						if compatibility_oracle.check(cur_tile, other_tile, d):
-							new_tiles.append(other_tile)
+							other_possible = true
 							break
-				if new_tiles.empty():
+					if not other_possible:
+						new_possible_other_tiles.erase(other_tile)
+						removed = true
+													
+				if new_possible_other_tiles.empty():
 					print("No possible tiles ", cur_coords, " - ", other_coords, " Current Tiles: ", cur_possible_tiles, " Other Tiles: ", possible_other_tiles)
-					new_tiles = [[22, 0]]
-					#continue
+					new_possible_other_tiles = [[22, 0]]
 					
-				if len(new_tiles) != len(possible_other_tiles):
-					wavefunction.set(other_coords, new_tiles, len(new_tiles) == 1)
+				if removed:
+					wavefunction.set(other_coords, new_possible_other_tiles, len(new_possible_other_tiles) == 1)
 					if not stack.has(other_coords):
 						stack.append(other_coords)
 				
