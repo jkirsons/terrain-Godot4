@@ -1,9 +1,9 @@
 shader_type spatial;
 //render_mode unshaded, world_vertex_coords;//, depth_draw_alpha_prepass;//, cull_disabled;
 //render_mode depth_draw_always;
-render_mode depth_draw_always;
+render_mode depth_draw_always, cull_disabled; //, world_vertex_coords;//, world_vertex_coords;//, world_vertex_coords;
 // Rounded World
-uniform float world_roundness = 25.0;
+uniform float world_roundness = 24.0;
 uniform float world_falloff = 3.0;
 
 // For edge foam
@@ -25,9 +25,9 @@ uniform float water_height = 0.0;
 
 vec3 to_world(mat4 world_matrix, vec3 pos)
 {
+	//return pos;
 	return (world_matrix * vec4(pos, 1.0)).xyz;
 }
-
 
 float height(vec2 pos, float time, float noise){
 	return (wave_amplitude.x * sin(pos.x * wave_frequency.x * noise + time * wave_time_factor.x)) + (wave_amplitude.y * sin(pos.y * wave_frequency.y * noise + time * wave_time_factor.y));
@@ -40,7 +40,6 @@ float fake_random(vec2 p){
 vec2 faker(vec2 p){
 	return vec2(fake_random(p), fake_random(p*124.32));
 }
-
 
 void vertex() {
 	// rounded world	
@@ -66,7 +65,7 @@ float linearize(float c_depth) {
 void fragment()
 {
 	// edge foam
-	//float zdepth = texture(DEPTH_TEXTURE, UV.xy).r;
+	//float zdepth = textureLod(DEPTH_TEXTURE, SCREEN_UV, 0.0).r;
     float zdepth = linearize(texture(DEPTH_TEXTURE, SCREEN_UV).x);
     float zpos = linearize(FRAGCOORD.z);
     float diff = zdepth - zpos;
@@ -76,9 +75,9 @@ void fragment()
     diff += displ.x;
    
     vec4 col = mix(foam_color, water_color, step(foam_depth, diff));
-    
+
 	if(false) {
-		ALBEDO = vec3(0.0, 0.0, zdepth / 50.0);
+		ALBEDO = vec3(0.0, 0.0, zdepth / 5.0);
 	} else
 	ALBEDO = col.rgb;
 }
