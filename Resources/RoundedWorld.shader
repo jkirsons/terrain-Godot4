@@ -14,10 +14,13 @@ vec3 to_world(mat4 world_matrix, vec3 pos)
 void vertex() {
 	float dist = length(CAMERA_MATRIX[3].xyz - to_world(WORLD_MATRIX, VERTEX)) / world_roundness; 
 	VERTEX -= (vec4(0.0, pow(dist, world_falloff), 0.0, 1.0) * WORLD_MATRIX).xyz;
+	//float dist = length(CAMERA_MATRIX[3].xyz - VERTEX) / world_roundness; 
+	//VERTEX.y -= pow(dist, world_falloff); 
 }
 
 void fragment() {
 	vec4 tex = texture(BASE_TEX, UV);
+
 
 	ALBEDO = tex.rgb;
 	ALPHA = tex.a;

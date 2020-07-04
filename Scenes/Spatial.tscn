@@ -8,10 +8,9 @@
 script = null
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="."]
-transform = Transform( -0.780464, 0.601358, 0.17101, 0.410126, 0.286001, 0.866025, 0.471883, 0.746037, -0.469846, -10.1894, 5.26932, 15.9107 )
+transform = Transform( -0.780464, 0.601359, 0.17101, 0.516759, 0.46653, 0.717851, 0.351904, 0.648628, -0.674867, -10.1894, 5.26932, 15.9107 )
 light_color = Color( 0.960784, 0.964706, 0.866667, 1 )
 shadow_enabled = true
-directional_shadow_mode = 0
 script = null
 
 [node name="GridMap" type="GridMap" parent="."]

@@ -443,7 +443,7 @@ anims/Run_1 = ExtResource( 7 )
 script = null
 
 [node name="metarig" type="Node3D" parent="Robot"]
-transform = Transform( 0.999555, 0.0297871, 0.0018683, -0.0298092, 0.999469, 0.0131794, -0.00147473, -0.0132292, 0.999911, -0.0365188, -0.0233878, 0.0302023 )
+transform = Transform( 0.687644, 0.0165323, -0.725859, -0.0579071, 0.997805, -0.0321323, 0.723735, 0.0641281, 0.687092, -0.01904, -0.0297231, -0.0758676 )
 script = null
 
 [node name="spine" type="Node3D" parent="Robot/metarig"]
@@ -451,31 +451,31 @@ transform = Transform( 0.999992, -7.63393e-07, 0.0040081, 0.00120079, 0.954125, 
 script = null
 
 [node name="spine001" type="Node3D" parent="Robot/metarig/spine"]
-transform = Transform( 0.99987, 0.00789295, -0.014042, -0.00298952, 0.947507, 0.31972, 0.0158284, -0.319637, 0.947408, -1.43847e-09, 0.174589, 4.04689e-08 )
+transform = Transform( 0.999289, 0.00985638, -0.0364024, 0.0010983, 0.957229, 0.28933, 0.0376972, -0.289165, 0.956537, -1.43847e-09, 0.174589, 4.04689e-08 )
 script = null
 
 [node name="spine002" type="Node3D" parent="Robot/metarig/spine/spine001"]
-transform = Transform( 0.999745, -0.0107947, -0.0198295, 0.00840424, 0.993108, -0.116905, 0.0209547, 0.116708, 0.992945, 1.83663e-09, 0.0875405, -1.51874e-08 )
+transform = Transform( 0.998738, -0.0113593, -0.0489244, 0.00296657, 0.98573, -0.168308, 0.0501381, 0.16795, 0.98452, 6.12443e-10, 0.0875406, -3.92001e-09 )
 script = null
 
 [node name="spine003" type="Node3D" parent="Robot/metarig/spine/spine001/spine002"]
-transform = Transform( 0.999646, -0.000784937, -0.0265904, 0.0014706, 0.999667, 0.0257764, 0.0265613, -0.0258064, 0.999314, 1.36064e-11, 0.272713, -9.9477e-09 )
+transform = Transform( 0.998418, -0.000861218, -0.0562187, -0.000604904, 0.99966, -0.0260567, 0.056222, 0.0260495, 0.998078, 4.35805e-11, 0.272713, -8.87789e-09 )
 script = null
 
 [node name="spine004" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003"]
-transform = Transform( 0.995843, -0.00128603, 0.091073, 0.0127269, 0.992056, -0.125154, -0.0901885, 0.125793, 0.987948, 1.37243e-09, 0.222484, 1.63208e-08 )
+transform = Transform( 0.997035, 0.00516411, 0.0767746, 0.00949307, 0.981868, -0.189326, -0.0763602, 0.189493, 0.978908, -1.1812e-09, 0.222484, -1.51101e-08 )
 script = null
 
 [node name="spine005" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/spine004"]
-transform = Transform( 0.996425, 0.000478677, -0.0844859, 0.00100603, 0.999846, 0.01753, 0.0844813, -0.0175523, 0.99627, 1.2536e-09, 0.0426867, -1.96698e-08 )
+transform = Transform( 0.99513, 0.00096703, -0.0985696, -0.00562332, 0.99888, -0.0469717, 0.0984138, 0.0472972, 0.994021, 1.11085e-09, 0.0426866, -1.86027e-08 )
 script = null
 
 [node name="spine006" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/spine004/spine005"]
-transform = Transform( 0.999494, 0.000841792, -0.0317817, 0.00228033, 0.995177, 0.0980723, 0.031711, -0.0980952, 0.994672, -7.89642e-10, 0.0423252, 1.36406e-08 )
+transform = Transform( 0.99894, 0.00786439, -0.0453501, -0.0063286, 0.999405, 0.03391, 0.0455898, -0.033587, 0.998395, -4.22279e-09, 0.0423254, -9.47816e-09 )
 script = null
 
 [node name="spine006_end" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/spine004/spine005/spine006"]
-transform = Transform( 1, -2.66234e-10, -1.09068e-09, 2.66234e-10, 1, -1.63101e-09, 1.09068e-09, 1.63101e-09, 1, 8.83951e-10, 0.212321, 4.65386e-09 )
+transform = Transform( 1, -4.19941e-10, -3.60762e-09, 4.19941e-10, 1, 8.28292e-10, 3.60762e-09, -8.28292e-10, 1, 8.83951e-10, 0.212321, 4.65386e-09 )
 script = null
 
 [node name="Head" type="MeshInstance3D" parent="Robot/metarig/spine/spine001/spine002/spine003/spine004/spine005/spine006"]
@@ -491,23 +491,23 @@ material/0 = null
 script = null
 
 [node name="shoulderL" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003"]
-transform = Transform( 0.0703356, 0.978873, -0.191989, -0.0325835, 0.194617, 0.980338, 0.996991, -0.062697, 0.0455837, 0.0205856, 0.167976, -0.0494588 )
+transform = Transform( 0.0469473, 0.991234, -0.123493, -0.0388587, 0.125348, 0.991352, 0.998141, -0.0417426, 0.0444027, 0.0205856, 0.167976, -0.0494588 )
 script = null
 
 [node name="upper_armL" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderL"]
-transform = Transform( -0.0891074, -0.0189052, 0.995843, -0.991679, 0.0949543, -0.0869321, -0.092916, -0.995302, -0.027209, -0.0133559, 0.272935, -0.0333795 )
+transform = Transform( -0.116317, 0.0230967, 0.992944, -0.988873, 0.0906565, -0.117949, -0.092741, -0.995614, 0.0122949, -0.0133559, 0.272935, -0.0333796 )
 script = null
 
 [node name="forearmL" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderL/upper_armL"]
-transform = Transform( 0.944275, 0.0766015, 0.320119, 0.0471404, 0.931046, -0.361844, -0.325763, 0.356771, 0.875553, -7.59553e-08, 0.321992, -1.36969e-08 )
+transform = Transform( 0.944191, 0.0749162, 0.320766, 0.0461039, 0.934152, -0.353885, -0.326156, 0.348923, 0.878564, -6.20637e-08, 0.321992, 1.45508e-08 )
 script = null
 
 [node name="handL" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderL/upper_armL/forearmL"]
-transform = Transform( 0.673938, -0.0234226, -0.738417, -0.385191, 0.841754, -0.378256, 0.630425, 0.539352, 0.558268, -6.10102e-08, 0.420001, 3.5111e-08 )
+transform = Transform( 0.665225, -0.146691, -0.732091, -0.256598, 0.875872, -0.408663, 0.701165, 0.459706, 0.545012, -2.54673e-08, 0.420001, 2.79977e-08 )
 script = null
 
 [node name="handL_end" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderL/upper_armL/forearmL/handL"]
-transform = Transform( 1, -1.5177e-07, 2.84088e-07, 1.5177e-07, 1, 9.77888e-08, -2.84088e-07, -9.77888e-08, 1, -3.72531e-09, 0.217159, -5.41576e-08 )
+transform = Transform( 1, -1.61608e-07, 2.74252e-07, 1.61608e-07, 1, 9.77888e-08, -2.74252e-07, -9.77888e-08, 1, -3.7253e-09, 0.217159, -1.48087e-08 )
 script = null
 
 [node name="Hand" type="MeshInstance3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderL/upper_armL/forearmL/handL"]
@@ -547,23 +547,23 @@ material/0 = null
 script = null
 
 [node name="shoulderR" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003"]
-transform = Transform( -0.074398, -0.985501, 0.152486, 0.0388785, 0.149927, 0.987932, -0.99647, 0.0794287, 0.0271606, -0.0205856, 0.167976, -0.0494588 )
+transform = Transform( -0.0954046, -0.979983, 0.174731, 0.0395112, 0.171665, 0.984363, -0.994654, 0.100816, 0.0223427, -0.0205856, 0.167976, -0.0494588 )
 script = null
 
 [node name="upper_armR" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderR"]
-transform = Transform( 0.142804, -0.0355258, -0.989113, 0.988344, 0.0583854, 0.140596, 0.052755, -0.997662, 0.0434493, 0.0133559, 0.272935, -0.0333797 )
+transform = Transform( 0.142403, -0.215397, -0.966088, 0.989388, 0.0594493, 0.132583, 0.0288754, -0.974715, 0.221577, 0.0133559, 0.272935, -0.0333797 )
 script = null
 
 [node name="forearmR" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderR/upper_armR"]
-transform = Transform( 0.944974, -0.0891714, -0.314759, -0.0548755, 0.905297, -0.421219, 0.322511, 0.415314, 0.850589, 7.70537e-08, 0.321992, 1.69396e-08 )
+transform = Transform( 0.943556, -0.0604941, -0.325641, -0.0372271, 0.957579, -0.285756, 0.329113, 0.281749, 0.901278, 2.87757e-08, 0.321992, -7.51725e-09 )
 script = null
 
 [node name="handR" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderR/upper_armR/forearmR"]
-transform = Transform( 0.711495, 0.0708377, 0.699112, 0.27215, 0.88948, -0.367097, -0.64785, 0.451451, 0.613582, 3.49007e-08, 0.42, 7.66747e-09 )
+transform = Transform( 0.742671, 0.0608928, 0.666882, 0.350701, 0.813005, -0.464793, -0.570481, 0.579064, 0.58244, 2.41512e-08, 0.42, 1.07568e-08 )
 script = null
 
 [node name="handR_end" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderR/upper_armR/forearmR/handR"]
-transform = Transform( 1, 7.0851e-08, -1.3925e-07, -7.0851e-08, 1, 9.50654e-08, 1.3925e-07, -9.50654e-08, 1, -4.43986e-08, 0.217159, 3.91155e-08 )
+transform = Transform( 1, 5.11765e-08, -1.34332e-07, -5.11765e-08, 1, 7.53909e-08, 1.34332e-07, -7.53909e-08, 1, -5.63877e-08, 0.217159, 3.91156e-08 )
 script = null
 
 [node name="Hand001" type="MeshInstance3D" parent="Robot/metarig/spine/spine001/spine002/spine003/shoulderR/upper_armR/forearmR/handR"]
@@ -603,19 +603,19 @@ material/0 = null
 script = null
 
 [node name="breastL" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003"]
-transform = Transform( -1, -3.74284e-09, 8.7406e-08, 8.74772e-08, -0.0285599, 0.999592, -1.24501e-09, 0.999592, 0.0285599, 0.136786, -0.00563876, -0.0493966 )
+transform = Transform( -1, -2.49882e-09, 8.75404e-08, 8.75761e-08, -0.0285599, 0.999592, 2.34124e-12, 0.999592, 0.0285599, 0.136786, -0.00563876, -0.0493966 )
 script = null
 
 [node name="breastL_end" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/breastL"]
-transform = Transform( 1, 3.14283e-09, 4.66604e-10, -3.14283e-09, 1, 6.3554e-08, -4.66604e-10, -6.3554e-08, 1, 5.35694e-10, 0.160816, -2.70763e-08 )
+transform = Transform( 1, 3.15364e-09, 3.22504e-10, -3.15364e-09, 1, 6.60133e-08, -3.22504e-10, -6.60133e-08, 1, -9.30155e-09, 0.160816, -2.70763e-08 )
 script = null
 
 [node name="breastR" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003"]
-transform = Transform( -1, -3.74284e-09, 8.7406e-08, 8.74772e-08, -0.0285599, 0.999592, -1.24501e-09, 0.999592, 0.0285599, -0.136786, -0.00563876, -0.0493965 )
+transform = Transform( -1, -2.49882e-09, 8.75404e-08, 8.75761e-08, -0.0285599, 0.999592, 2.34124e-12, 0.999592, 0.0285599, -0.136786, -0.00563876, -0.0493965 )
 script = null
 
 [node name="breastR_end" type="Node3D" parent="Robot/metarig/spine/spine001/spine002/spine003/breastR"]
-transform = Transform( 1, 3.14283e-09, 4.66604e-10, -3.14283e-09, 1, 6.3554e-08, -4.66604e-10, -6.3554e-08, 1, 3.0338e-08, 0.160816, 1.38042e-08 )
+transform = Transform( 1, 3.15364e-09, 3.22504e-10, -3.15364e-09, 1, 6.60133e-08, -3.22504e-10, -6.60133e-08, 1, 2.05008e-08, 0.160816, 1.38042e-08 )
 script = null
 
 [node name="Chest" type="MeshInstance3D" parent="Robot/metarig/spine/spine001/spine002"]
@@ -647,31 +647,31 @@ transform = Transform( 1, -2.98024e-08, -1.49012e-08, 2.98024e-08, 1, -8.6613e-0
 script = null
 
 [node name="thighL" type="Node3D" parent="Robot/metarig/spine"]
-transform = Transform( 0.997389, 0.0703627, -0.0162594, 0.0447563, -0.778953, -0.625481, -0.056676, 0.62312, -0.780069, 0.130229, -0.00624939, 0.0500199 )
+transform = Transform( 0.949576, 0.15156, -0.274468, -0.0579669, -0.775446, -0.628747, -0.308127, 0.612953, -0.727561, 0.130229, -0.00624939, 0.0500199 )
 script = null
 
 [node name="shinL" type="Node3D" parent="Robot/metarig/spine/thighL"]
-transform = Transform( 0.987939, 0.0257814, -0.152685, -0.122276, 0.734871, -0.667093, 0.0950054, 0.677717, 0.729159, -1.63097e-08, 0.446181, -6.8093e-09 )
+transform = Transform( 0.985066, 0.0195323, -0.171067, -0.139283, 0.674483, -0.725033, 0.10122, 0.738032, 0.667131, -1.28313e-08, 0.446181, -5.13549e-09 )
 script = null
 
 [node name="footL" type="Node3D" parent="Robot/metarig/spine/thighL/shinL"]
-transform = Transform( 0.984472, 0.0387504, -0.171212, 0.135792, 0.449987, 0.88265, 0.111247, -0.892194, 0.437738, 2.08297e-08, 0.563975, 8.48173e-09 )
+transform = Transform( 0.871159, 0.367831, -0.325243, 0.12273, 0.478252, 0.869605, 0.475415, -0.797481, 0.371489, 2.4886e-08, 0.563975, -9.01636e-09 )
 script = null
 
 [node name="toeL" type="Node3D" parent="Robot/metarig/spine/thighL/shinL/footL"]
-transform = Transform( 1, -1.19238e-06, -8.26261e-07, 1.19239e-06, 0.999999, 6.21622e-07, 8.2626e-07, -6.21623e-07, 1, -4.99108e-08, 0.168748, -3.52383e-09 )
+transform = Transform( 1, -2.18732e-06, -1.32919e-06, 2.18732e-06, 1, -2.06429e-08, 1.32919e-06, 2.064e-08, 1, -4.02867e-08, 0.168748, -6.70844e-09 )
 script = null
 
 [node name="toeL_end" type="Node3D" parent="Robot/metarig/spine/thighL/shinL/footL/toeL"]
-transform = Transform( 1, -3.52015e-08, 2.30054e-07, 3.52015e-08, 1, 1.26785e-08, -2.30054e-07, -1.26785e-08, 1, 1.01634e-08, 0.0980977, 1.61005e-08 )
+transform = Transform( 1, -2.29049e-08, 2.25136e-07, 2.29049e-08, 1, -1.68331e-08, -2.25136e-07, 1.68331e-08, 1, 3.26142e-10, 0.0980977, 6.26331e-09 )
 script = null
 
 [node name="heel02L" type="Node3D" parent="Robot/metarig/spine/thighL/shinL/footL"]
-transform = Transform( 1, -8.49198e-08, -1.53529e-07, 8.49198e-08, 1, 1.00117e-07, 1.53529e-07, -1.00117e-07, 1, -0.048489, 0.0683806, 0.0914467 )
+transform = Transform( 1, -6.57787e-08, -1.11106e-07, 6.57787e-08, 1, 2.09078e-07, 1.11106e-07, -2.09078e-07, 1, -0.048489, 0.0683806, 0.0914467 )
 script = null
 
 [node name="heel02L_end" type="Node3D" parent="Robot/metarig/spine/thighL/shinL/footL/heel02L"]
-transform = Transform( 1, 2.93056e-09, 1.90203e-07, -2.93054e-09, 1, -1.24561e-07, -1.90203e-07, 1.24561e-07, 1, 1.44277e-08, 0.0924232, -3.48303e-09 )
+transform = Transform( 1, 1.03085e-08, 1.76677e-07, -1.03085e-08, 1, -1.04887e-07, -1.76677e-07, 1.04887e-07, 1, 1.44277e-08, 0.0924232, -1.02372e-09 )
 script = null
 
 [node name="Ankle" type="MeshInstance3D" parent="Robot/metarig/spine/thighL/shinL/footL"]
@@ -711,31 +711,31 @@ material/0 = null
 script = null
 
 [node name="thighR" type="Node3D" parent="Robot/metarig/spine"]
-transform = Transform( 0.97103, -0.122957, 0.204898, 0.0360379, -0.772299, -0.634236, 0.236226, 0.623246, -0.745494, -0.130626, -0.00624915, 0.0489742 )
+transform = Transform( 0.997363, 0.0576651, 0.0440678, 0.0705757, -0.629053, -0.774152, -0.0169206, 0.775221, -0.631463, -0.130626, -0.00624915, 0.0489742 )
 script = null
 
 [node name="shinR" type="Node3D" parent="Robot/metarig/spine/thighR"]
-transform = Transform( 0.994027, -0.0354906, 0.103206, 0.0928898, 0.77156, -0.629338, -0.0572944, 0.635166, 0.770248, -8.317e-09, 0.446181, 2.65785e-08 )
+transform = Transform( 0.995284, -0.0730626, -0.0638063, 0.0189458, 0.791533, -0.610833, 0.0951338, 0.606744, 0.789184, 1.10073e-08, 0.446181, 3.5658e-08 )
 script = null
 
 [node name="footR" type="Node3D" parent="Robot/metarig/spine/thighR/shinR"]
-transform = Transform( 0.990515, 0.0152835, 0.136556, -0.124819, 0.515628, 0.847672, -0.0574565, -0.856676, 0.512645, 1.21138e-08, 0.563975, -2.62585e-09 )
+transform = Transform( 0.948741, 0.296413, -0.109678, -0.103027, 0.61812, 0.779303, 0.29879, -0.728057, 0.616975, 1.19134e-08, 0.563975, 1.41124e-08 )
 script = null
 
 [node name="toeR" type="Node3D" parent="Robot/metarig/spine/thighR/shinR/footR"]
-transform = Transform( 1, 3.80669e-07, -1.2116e-06, -3.80668e-07, 1, 2.84879e-07, 1.2116e-06, -2.84879e-07, 1, -5.08345e-09, 0.168749, 1.61368e-08 )
+transform = Transform( 1, 6.515e-07, -4.44301e-07, -6.515e-07, 1, 3.62309e-07, 4.44301e-07, -3.62309e-07, 1, -5.08345e-09, 0.168749, 1.61368e-08 )
 script = null
 
 [node name="toeR_end" type="Node3D" parent="Robot/metarig/spine/thighR/shinR/footR/toeR"]
-transform = Transform( 1, 2.01665e-09, 1.01936e-07, -2.01667e-09, 1, 1.77918e-07, -1.01936e-07, -1.77918e-07, 1, 1.78468e-08, 0.0980976, 8.11893e-11 )
+transform = Transform( 1, 3.70743e-09, 9.37897e-08, -3.70744e-09, 1, 1.68081e-07, -9.37897e-08, -1.68081e-07, 1, 8.00956e-09, 0.0980976, 9.91845e-09 )
 script = null
 
 [node name="heel02R" type="Node3D" parent="Robot/metarig/spine/thighR/shinR/footR"]
-transform = Transform( 1, 3.89721e-07, -6.83325e-08, -3.89721e-07, 1, 4.20866e-07, 6.83327e-08, -4.20866e-07, 1, 0.0484888, 0.0683805, 0.0914469 )
+transform = Transform( 1, 4.30833e-07, -2.56162e-07, -4.30833e-07, 1, 4.01943e-07, 2.56162e-07, -4.01943e-07, 1, 0.0484888, 0.0683805, 0.0914469 )
 script = null
 
 [node name="heel02R_end" type="Node3D" parent="Robot/metarig/spine/thighR/shinR/footR/heel02R"]
-transform = Transform( 1, 4.25078e-08, -2.38494e-07, -4.25078e-08, 1, -3.8019e-08, 2.38494e-07, 3.8019e-08, 1, 7.66112e-09, 0.0924233, -3.07429e-09 )
+transform = Transform( 1, 2.12962e-08, -2.10211e-07, -2.12962e-08, 1, -1.83446e-08, 2.10211e-07, 1.83446e-08, 1, -2.17611e-09, 0.0924233, -3.07429e-09 )
 script = null
 
 [node name="Ankle001" type="MeshInstance3D" parent="Robot/metarig/spine/thighR/shinR/footR"]

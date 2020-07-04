@@ -27,18 +27,8 @@ func iterate():
 	currentPos.y = 0
 	wavecollapse._on_Player_position_changed(currentPos, 20.0)
 
-func _on_Model_tile_ready(pos, item, orientation):
-	#set_cell_item(x, y, z, item, orientation)
-	call_deferred("set_cell_item", pos.x, pos.y, pos.z, item, orientation)
-	#mutex.lock()
-	#tiles[pos] = [item, orientation]
-	#mutex.unlock()
+func _on_Model_tile_ready(pos: Vector3i, item, orientation):
+	call_deferred("set_cell_item", pos, item, orientation)
 
 func _physics_process(delta):
-	#mutex.lock()
-	#for tile in tiles:
-	#	set_cell_item(tile.x, tile.y, tile.z, tiles[tile][0], tiles[tile][1])
-	#tiles.clear()
-	#mutex.unlock()
-	
 	iterate()

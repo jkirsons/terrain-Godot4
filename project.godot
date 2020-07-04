@@ -72,6 +72,4 @@ file_logging/enable_file_logging=true
 [rendering]
 
 environment/default_environment="res://default_env.tres"
-quality/shadows/filter_mode=2
-quality/filters/msaa=2
-quality/intended_usage/framebuffer_allocation.mobile=2
+canvas_textures/default_texture_filter=0
