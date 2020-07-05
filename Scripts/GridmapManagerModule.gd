@@ -1,4 +1,4 @@
-#tool
+tool
 extends GridMap
 
 export var playerPath : NodePath
