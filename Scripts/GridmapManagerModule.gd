@@ -1,11 +1,11 @@
-tool
+@tool
 extends GridMap
 
-export var playerPath : NodePath
-onready var player : Node3D = get_node(playerPath)
+@export_node_path(Node3D) var playerPath : NodePath
+var player : Node3D
 
-export var wavecollapsePath : NodePath
-onready var wavecollapse : WaveCollapse = get_node(wavecollapsePath)
+@export_node_path(WaveCollapse) var wavecollapsePath : NodePath
+var wavecollapse : WaveCollapse
 
 var lastPlayerPos := Vector3()
 var mutex = Mutex.new()
@@ -13,12 +13,15 @@ var tiles = {}
 
 func _ready():
 	#if not Engine.editor_hint:
+	player = get_node(playerPath) as Node3D
+	wavecollapse = get_node(wavecollapsePath) as WaveCollapse
 	setup()
 
 func setup():
 	clear()
 	var self_var = self
-	wavecollapse.connect("cell_changed", Callable(self_var, "_on_Model_tile_ready"))
+	#wavecollapse.connect("cell_changed", Callable(self_var, "_on_Model_tile_ready"))
+	wavecollapse.connect("cell_changed", self._on_Model_tile_ready)
 	iterate()
 	wavecollapse.process_thread()
 

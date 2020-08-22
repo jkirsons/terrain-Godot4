@@ -11,7 +11,7 @@ var basisList = [
 var surrounding = [[-1,-1],[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0]]
 
 # Tile metadata
-export var tiles = {}
+@export var tiles : Dictionary = {} 
 
 func _ready():
 	loadTiles()
@@ -81,7 +81,7 @@ func checkHeight(xy, buff):
 			return true
 	return false
 
-func leftRotate(arr : Array, steps):
+func leftRotate(arr : Array, steps : int):
 	for x in range(0,steps): 
 		var temp = arr[0] 
 		for i in range(arr.size() - 1): 
@@ -96,13 +96,13 @@ func getTileSetName(tileName):
 			return tileSet
 	return ""
 	
-func fillRect(x_start, z_start, y, width, height, gridMap :GridMap, itemName : String):
+func fillRect(x_start : int, z_start : int, y : int, width : int, height : int, gridMap :GridMap, itemName : String):
 	var item = gridMap.mesh_library.find_item_by_name(itemName)
 	for x in range(x_start, x_start+width):
 		for z in range(z_start, z_start+height):
-			gridMap.set_cell_item(x, y, z, item)
+			gridMap.set_cell_item(Vector3i(x, y, z), item)
 
-func fillCircle(x_centre, z_centre, y, radius, gridMap : GridMap, itemName : String):
+func fillCircle(x_centre, z_centre, y, radius : int, gridMap : GridMap, itemName : String):
 	var item = gridMap.mesh_library.find_item_by_name(itemName)
 	
 	var buffer = {}
@@ -112,7 +112,7 @@ func fillCircle(x_centre, z_centre, y, radius, gridMap : GridMap, itemName : Str
 				buffer[[x, y]] = item
 		
 	for obj in buffer:
-		gridMap.set_cell_item(obj[0] + x_centre, y, obj[1] + z_centre, buffer[obj])
+		gridMap.set_cell_item(Vector3i(obj[0] + x_centre, y, obj[1] + z_centre), buffer[obj])
 	
 	# smooth edges
 	var ret = smooth(buffer, getTileSetName(itemName), gridMap.mesh_library)

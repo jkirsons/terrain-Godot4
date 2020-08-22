@@ -1,6 +1,6 @@
 extends Camera3D
 
-export var speed = 4.0
+@export var speed := 4.0
 var fixedMode := true # This is set on the player
 
 # Called when the node enters the scene tree for the first time.

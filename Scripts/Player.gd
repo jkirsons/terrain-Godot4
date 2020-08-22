@@ -1,12 +1,12 @@
 extends KinematicBody3D
 
-export var gravity = -10
-export var max_speed = 5
-export var turn_speed = 1.2
-export var fixedMode := true
+@export var gravity : float = -10
+@export var max_speed : float = 5
+@export var turn_speed : float = 1.2
+@export var fixedMode := true
 
-onready var camera = get_node("/root/Spatial/Player/Target/Camera")
-onready var anim = get_node("AnimationTree")
+@onready var camera = get_node("/root/Spatial/Player/Target/Camera")
+@onready var anim = get_node("AnimationTree")
 
 var velocity = Vector3()
 var inputs = {"ui_up": Vector3.FORWARD, "ui_down": Vector3.BACK, "ui_left": Vector3.LEFT, "ui_right": Vector3.RIGHT}
@@ -20,7 +20,7 @@ func _physics_process(delta):
 	if fixedMode:
 		desired_velocity = input * max_speed
 	else:
-		desired_velocity = global_transform.basis.xform(Vector3(0,0,input.z) * max_speed)
+		desired_velocity = global_transform.basis.xform(Vector3(0.0, 0.0, input.z) * max_speed)
 
 #	velocity.x = desired_velocity.x
 #	velocity.z = desired_velocity.z

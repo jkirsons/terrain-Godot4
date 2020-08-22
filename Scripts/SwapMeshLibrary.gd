@@ -1,7 +1,7 @@
-tool
+@tool
 extends GridMap
 
-export var swapWith : MeshLibrary
+@export var swapWith : MeshLibrary
 
 func _ready():
 	for tile in mesh_library.get_item_list():
